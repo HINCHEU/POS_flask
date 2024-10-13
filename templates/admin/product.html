@@ -1,0 +1,171 @@
+{% extends "admin/layout.html" %}
+{% block main_content %}
+<div id="app">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Product Table</h6>
+                        <div class="ml-3 float-end">
+                            <div class="btn  btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModalSignUp"
+                                @click="show_add_modal">Add</div>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            No</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Code</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Image</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Name</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Category</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Cost</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Price</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Current Stock</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="ml-2">
+                                            <p class="text-secondary mb-0 ml-2">001</p>
+                                        </td>
+                                       <td class="ml-2 align-center">
+                                            <p class="text-secondary mb-0 ml-2">001</p>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+                                                <div>
+                                                    <img src="/static/admin/assets/img/team-2.jpg"
+                                                        class="avatar avatar-sm me-3" alt="user1">
+                                                </div>
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">John Michael</h6>
+                                                    <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                       <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="badge badge-sm bg-gradient-success">Online</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="btn btn-primary ">Edit</div>
+                                            <div class="btn btn-warning">Delete</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal for Add -->
+        <div class="modal fade" v-if="showModal" id="exampleModalSignUp" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="card card-plain">
+                            <div class="card-header pb-0 text-left">
+                                <h3 class="font-weight-bolder text-primary text-gradient">Join us today</h3>
+                                <p class="mb-0">Enter your email and password to register</p>
+                            </div>
+                            <div class="card-body pb-3">
+                                <form role="form text-left">
+                                    <label>Name</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Name" aria-label="Name"
+                                            aria-describedby="name-addon">
+                                    </div>
+                                    <label>Email</label>
+                                    <div class="input-group mb-3">
+                                        <input type="email" class="form-control" placeholder="Email" aria-label="Email"
+                                            aria-describedby="email-addon">
+                                    </div>
+                                    <label>Password</label>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Password"
+                                            aria-label="Password" aria-describedby="password-addon">
+                                    </div>
+                                    <div class="form-check form-check-info text-left">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                            checked="">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            I agree to the <a href="javascript:;"
+                                                class="text-dark font-weight-bolder">Terms and Conditions</a>
+                                        </label>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="button"
+                                            class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Sign
+                                            up</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer text-center pt-0 px-sm-4 px-1">
+                                <p class="mb-4 mx-auto">
+                                    Already have an account? <a href="javascript:;"
+                                        class="text-dark font-weight-bolder">Sign in</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block vue %}
+
+    <script>
+    const { createApp } = Vue
+    createApp({
+        delimiters: ['[[', ']]'],
+        data() {
+            return{
+                showModal: false,
+                message: 'hi',
+            }
+        },
+        methods: {
+            show_add_modal() {
+                this.showModal = true;
+            }
+        }
+    }).mount('#app')
+</script>
+{% endblock %}
+

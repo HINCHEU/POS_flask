@@ -1,0 +1,202 @@
+{% extends "admin/layout.html" %}
+{% block main_content %}
+<div id="app">
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Categories table</h6>
+            <div class="ml-3 float-end">
+              <div class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModalSignUp"
+                @click="show_add_category_modal">Add</div>
+            </div>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="category in categories" :key="category.id">
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">[[ category.id ]]</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">[[ category.name ]]</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">[[ category.description ]]</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="align-middle text-center">
+                      <div class="btn btn-primary">Edit</div>
+                      <div class="btn btn-warning">Delete</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Add -->
+  <div class="modal fade" v-if="showModal" id="exampleModalSignUp" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-body p-0">
+          <div class="card card-plain">
+            <div class="card-header pb-0 text-left">
+              <h3 class="font-weight-bolder text-primary text-gradient">Category</h3>
+              <p class="mb-0">Enter Category Information</p>
+            </div>
+            <div class="card-body pb-3">
+              <form role="form text-left">
+                <label>Name</label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Name" v-model="newCategory.name">
+                </div>
+                <label>Description</label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Description" v-model="newCategory.description">
+                </div>
+                <div class="text-center">
+                  <button type="button" @click="addCategory"
+                    class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add Category</button>
+                  <button type="button" @click="close_add_category_modal"
+                    class="btn bg-gradient-warning btn-lg btn-rounded w-100 mt-4 mb-0"
+                    data-bs-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block vue %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+  const { createApp } = Vue;
+  createApp({
+    delimiters: ['[[', ']]'],
+    data() {
+      return {
+        showModal: false,
+        newCategory: {
+          name: '',
+          description: ''
+        },
+        categories: [] // To store fetched categories
+      }
+    },
+    mounted() {
+      this.fetchCategories(); // Fetch categories on load
+
+      // Add event listener for modal close to refocus the page
+      const modal = document.getElementById('exampleModalSignUp');
+      modal.addEventListener('hidden.bs.modal', () => {
+        // Refocus on the main content area after modal closes
+        document.body.focus();
+      });
+    },
+    methods: {
+      show_add_category_modal() {
+        this.showModal = true;
+      },
+      close_add_category_modal() {
+        this.showModal = false;
+      },
+      addCategory() {
+        fetch('/add_category', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.newCategory)
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              // Show SweetAlert on success
+              swal({
+                title: "Success!",
+                text: "You added the category successfully!",
+                icon: "success",
+                timer: 600,
+                buttons: false
+              });
+
+              // Close the modal after a successful addition
+              this.close_add_category_modal(); // Close modal
+              this.newCategory = { name: '', description: '' }; // Reset form
+
+              // Fetch updated categories after adding
+              this.fetchCategories();
+            } else {
+              // Handle failure
+              swal({
+                title: "Error!",
+                text: "There was a problem adding the category!",
+                icon: "error",
+                timer: 1500,
+                buttons: false
+              });
+            }
+          })
+          .catch(error => {
+            // Handle any errors during the fetch request
+            swal({
+              title: "Error!",
+              text: "Failed to add category!",
+              icon: "error",
+              timer: 1500,
+              buttons: false
+            });
+          });
+      },
+      fetchCategories() {
+        fetch('/categories', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            this.categories = data; // Populate categories from backend
+          })
+          .catch(error => {
+            console.error("Error fetching categories:", error);
+          });
+      }
+    }
+  }).mount('#app')
+</script>
+{% endblock %}
