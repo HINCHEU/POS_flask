@@ -1,227 +1,150 @@
-{% extends "admin/layout.html" %}
-{% block main_content %}
-<div id="app">
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header pb-0">
-                        <h6>Product Table</h6>
-                        <div class="ml-3 float-end">
-                            <div class="btn  btn-outline-primary" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalSignUp" @click="show_add_product_modal">Add</div>
-                        </div>
-                    </div>
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            No</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Code</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Image</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Name</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Category</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Qty</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Price</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Current Stock</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="ml-2">
-                                            <p class="text-secondary mb-0 ml-2">001</p>
-                                        </td>
-                                        <td class="ml-2 align-center">
-                                            <p class="text-secondary mb-0 ml-2">0765644</p>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="/static/admin/assets/img/team-2.jpg"
-                                                        class="avatar avatar-sm me-3" alt="user1">
-                                                </div>
-                                                <!-- <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">John Michael</h6>
-                                                    <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>
-                                                </div> -->
-                                            </div>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">Coca cola</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">drink</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">10</span>
-                                        </td>
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-success">Online</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">1202</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <div class="btn btn-primary ">Edit</div>
-                                            <div class="btn btn-warning">Delete</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header pb-0">
+                    <h6>Users Table</h6>
+                    <div class="ml-3 float-end">
+                        <div class="btn btn-outline-primary" @click="showAddUserModal">Add User</div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal for Adding Category -->
-    <div class="modal fade" id="addModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="card card-plain">
-                        <div class="card-header pb-0 text-left">
-                            <h3 class="font-weight-bolder text-primary text-gradient">Category</h3>
-                            <p class="mb-0">Enter Category Information</p>
-                        </div>
-                        <div class="card-body pb-3">
-                            <form role="form text-left">
-                                <div class="row">
-                                    <!-- First Column -->
-                                    <div class="col-md-6">
-                                        <label>Product Code</label>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control" placeholder="Product Code"
-                                                v-model="newProduct.code" />
-                                        </div>
-
-                                        <label>Product Name</label>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control" placeholder="Product Name"
-                                                v-model="newProduct.name" />
-                                        </div>
-
-                                        <label>Cost</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" class="form-control" placeholder="Cost"
-                                                v-model="newProduct.cost" />
-                                        </div>
-
-                                        <label>Current Stock</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" class="form-control" placeholder="Current Stock"
-                                                v-model="newProduct.current_stock" />
-                                        </div>
-                                    </div>
-
-                                    <!-- Second Column -->
-                                    <div class="col-md-6">
-
-
-                                        <label>Category</label>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control" placeholder="Category"
-                                                v-model="newProduct.category" />
-                                        </div>
-
-                                        <label>Price</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" class="form-control" placeholder="Price"
-                                                v-model="newProduct.price" />
-                                        </div>
-                                        <label>Product Image</label>
-                                        <div class="input-group mb-3">
-                                            <input type="file" class="form-control" @change="onImageUpload" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="text-center">
-                                    <button type="button" @click="addProduct"
-                                        class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">
-                                        Add Product
-                                    </button>
-                                    <button type="button" @click="close_add_product_modal"
-                                        class="btn bg-gradient-warning btn-lg btn-rounded w-100 mt-4 mb-0">
-                                        Close
-                                    </button>
-                                </div>
-                            </form>
-
-
-                        </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        No</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Code</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Profile</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Name</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Gender</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Role</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Email</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Phone</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Address</th>
+                                    <th
+                                        class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(user, index) in users" :key="user.id">
+                                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                        index + 1 ]]</td>
+                                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                        user.code ]]</td>
+                                    <td>
+                                        <img :src="user.profile" class="avatar avatar-sm" alt="User profile">
+                                    </td>
+                                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                        user.name ]]</td>
+                                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                        user.gender_id ]]
+                                    </td>
+                                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                        user.role ]]</td>
+                                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                        user.email ]]</td>
+                                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                        user.phone ]]</td>
+                                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                        user.address ]]</td>
+                                    <td class="align-middle text-center">
+                                        <div class="btn btn-primary" @click="showEditUserModal(user)">Edit</div>
+                                        <div class="btn btn-warning" @click="confirmDelete(user.id)">Delete</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block vue %}
+<!-- Modal for Editing User -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="btn-close" @click="closeModal('editUserModal')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="edit-name">Name:</label>
+                            <input type="text" class="form-control" v-model="editUser.name" id="edit-name" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit-code">Code:</label>
+                            <input type="text" class="form-control" v-model="editUser.code" id="edit-code" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit-email">Email:</label>
+                            <input type="email" class="form-control" v-model="editUser.email" id="edit-email" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit-phone">Phone:</label>
+                            <input type="tel" class="form-control" v-model="editUser.phone" id="edit-phone" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit-gender">Gender:</label>
+                            <select class="form-control" v-model="editUser.gender_id" id="edit-gender">
+                                <option value="1">Male</option>
+                                <option value="2">Female</option>
+                                <option value="3">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit-role">Role:</label>
+                            <input type="text" class="form-control" v-model="editUser.role" id="edit-role" />
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="edit-address">Address:</label>
+                            <textarea class="form-control" v-model="editUser.address" id="edit-address"></textarea>
+                        </div>
+                    </div>
 
-<script>
-    const { createApp } = Vue;
-    createApp({
-        delimiters: ['[[', ']]'],
-        data() {
-            return {
-                newProduct: {
-                    name: '',
-                    code: '',
-                    image: '',
-                    cost: '',
-                    price: '',
-                    current_stock: '',
-
-                },
-                editCategory: {
-                    id: null,
-                    name: '',
-                    description: ''
-                },
-                categories: [] // To store fetched categories
-            }
-        },
-        mounted() {
-            this.fetchProduct(); // Fetch categories on load
-        },
-        methods: {
-            onImageUpload(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    this.imageUrl = URL.createObjectURL(file); // Create a URL for the selected image
-                }
-            },
-            show_add_product_modal() {
-                const modal = new bootstrap.Modal(document.getElementById('addModel'));
-                modal.show();
-            },
-            closeModal(modalId) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
-                if (modal) {
-                    modal.hide();
-                }
-            },
-        }
-    }).mount('#app');
-</script>
-{% endblock %}
+                    <div class="mb-3">
+                        <label>Profile Image</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control" @change="onImageUpload" />
+                        </div>
+                        <div v-if="editUser.profile">
+                            <img :src="editUser.profile" alt="Selected Image" class="img-fluid mt-2"
+                                style="max-width: 100px;" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" @click="closeModal('editUserModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" @click="updateUser">Update User</button>
+            </div>
+        </div>
+    </div>
+</div>

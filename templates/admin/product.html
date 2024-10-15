@@ -17,30 +17,55 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Code</th>
-                                        <th>Image</th>
-                                        <th>Name</th>
-                                        <th>Cost</th>
-                                        <th>Category</th>
-                                        <th>Price</th>
-                                        <th>Current Stock</th>
-                                        <th>Action</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            No</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Code</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Image</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Name</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Cost</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Category</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Price</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Current Stock</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(product, index) in products" :key="product.id">
-                                        <td>[[ index + 1 ]]</td>
-                                        <td>[[ product.code ]]</td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            index + 1 ]]</td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            product.code ]]</td>
                                         <td>
                                             <img :src="product.image" class="avatar avatar-sm" alt="Product image">
                                         </td>
-                                        <td>[[ product.name ]]</td>
-                                        <td>[[ product.cost ]]</td>
-                                        <td>[[ product.category ]]</td>
-                                        <td>[[ product.price ]]</td>
-                                        <td>[[ product.current_stock ]]</td>
-                                        <td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            product.name ]]</td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            product.cost ]]</td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            product.category ]]</td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            product.price ]]</td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            product.current_stock ]]</td>
+                                        <td class="align-middle text-center">
                                             <div class="btn btn-primary" @click="show_edit_product_modal(product)">Edit
                                             </div>
                                             <div class="btn btn-warning" @click="confirmDelete(product.id)">Delete
@@ -149,7 +174,7 @@
     <!-- Modal for Editing Product -->
     <div class="modal fade" id="EditModel" tabindex="-1" role="dialog" aria-labelledby="EditModelTitle"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document"> <!-- Increased modal size -->
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Product</h5>
@@ -158,43 +183,48 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="form-group">
-                            <label for="edit-name">Name:</label>
-                            <input type="text" class="form-control" v-model="editProduct.name" id="edit-name" />
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-code">Code:</label>
-                            <input type="text" class="form-control" v-model="editProduct.code" id="edit-code" />
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-cost">Cost:</label>
-                            <input type="text" class="form-control" v-model="editProduct.cost" id="edit-cost" />
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-price">Price:</label>
-                            <input type="text" class="form-control" v-model="editProduct.price" id="edit-price" />
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-current_stock">Current Stock:</label>
-                            <input type="text" class="form-control" v-model="editProduct.current_stock"
-                                id="edit-current_stock" />
-                        </div>
-                        <label>Product Image</label>
-                        <div class="input-group mb-3">
-                            <input type="file" class="form-control" @change="onImageUpload" />
+                        <div class="row">
+                            <!-- First Column -->
+                            <div class="col-md-6 mb-3">
+                                <label for="edit-name">Name:</label>
+                                <input type="text" class="form-control" v-model="editProduct.name" id="edit-name" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit-code">Code:</label>
+                                <input type="text" class="form-control" v-model="editProduct.code" id="edit-code" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit-cost">Cost:</label>
+                                <input type="text" class="form-control" v-model="editProduct.cost" id="edit-cost" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit-price">Price:</label>
+                                <input type="text" class="form-control" v-model="editProduct.price" id="edit-price" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit-current_stock">Current Stock:</label>
+                                <input type="text" class="form-control" v-model="editProduct.current_stock"
+                                    id="edit-current_stock" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Category</label>
+                                <select class="form-control" v-model="editProduct.category">
+                                    <option v-for="category in categories" :value="category.name" :key="category.id">
+                                        [[ category.name ]]
+                                    </option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div v-if="editProduct.image">
-                            <img :src="editProduct.image" alt="Selected Image" class="img-fluid mt-2"
-                                style="max-width: 100px;" />
-                        </div>
-                        <label>Category</label>
-                        <div class="input-group mb-3">
-                            <select class="form-control" v-model="editProduct.category">
-                                <option v-for="category in categories" :value="category.name" :key="category.id">
-                                    [[ category.name ]]
-                                </option>
-                            </select>
+                        <div class="mb-3">
+                            <label>Product Image</label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" @change="onImageUpload" />
+                            </div>
+                            <div v-if="editProduct.image">
+                                <img :src="editProduct.image" alt="Selected Image" class="img-fluid mt-2"
+                                    style="max-width: 100px;" />
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -205,6 +235,8 @@
             </div>
         </div>
     </div>
+
+
 
 
 </div>
@@ -268,6 +300,7 @@
                     .then(response => response.json())
                     .then(data => {
                         this.categories = data; // Store categories in data
+                        console.log(this.categories)
                     })
                     .catch(error => console.error('Error fetching categories:', error));
             },
@@ -305,10 +338,16 @@
                 const file = event.target.files[0];
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    this.newProduct.image = e.target.result;
+                    // Check if we're editing a product
+                    if (this.editProduct.id) {
+                        this.editProduct.image = e.target.result;  // Update editProduct's image
+                    } else {
+                        this.newProduct.image = e.target.result;  // Update newProduct's image
+                    }
                 };
                 reader.readAsDataURL(file);
             },
+            // Other methods remain unchanged,
             confirmDelete(productId) {
                 swal({
                     title: "Are you sure?",
