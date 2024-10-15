@@ -213,29 +213,34 @@ def add_product():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-# Update product
 @app.route('/update_product/<int:id>', methods=['PUT'])
 def update_product(id):
     data = request.json
+
+    # Extract the product fields
     name = data.get('name')
     code = data.get('code')
-    image = data.get('image')
+    image_base64 = data.get('image')
     category = data.get('category')
     cost = data.get('cost')
     price = data.get('price')
     current_stock = data.get('current_stock')
-    
-    if not all([code, name, category, cost, price, current_stock]):
-        return jsonify({'status': 'error', 'message': 'All fields are required.'}), 400
-    
+
+    if not name or not code:
+        return jsonify({'status': 'error', 'message': 'Name and Code are required.'}), 400
+
     try:
         conn = get_db_connection()
-        conn.execute(
-            'UPDATE products SET code=?, image=?, name=?, category=?, cost=?, price=?, current_stock=? WHERE id=?',
-            (code, image, name, category, cost, price, current_stock, id)
+        cursor = conn.cursor()
+
+        # Update the product in the database, including the base64 image
+        cursor.execute(
+            'UPDATE products SET name = ?, code = ?, image = ?, category = ?, cost = ?, price = ?, current_stock = ? WHERE id = ?',
+            (name, code, image_base64, category, cost, price, current_stock, id)
         )
         conn.commit()
         conn.close()
+
         return jsonify({'status': 'success'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
