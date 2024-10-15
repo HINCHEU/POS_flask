@@ -1,36 +1,6 @@
 {% extends "admin/layout.html" %}
 {% block main_content %}
 <div id="app">
-  <div class="col-md-4">
-    <!-- Modal for Editing Category -->
-    <div class="modal fade" id="EditModel" tabindex="-1" role="dialog" aria-labelledby="EditModelTitle"
-      aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Edit Category</h5>
-            <button type="button" class="btn-close" @click="closeModal('EditModel')" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="edit-name">Name:</label>
-                <input type="text" class="form-control" v-model="editCategory.name" id="edit-name" />
-              </div>
-              <div class="form-group">
-                <label for="edit-description">Description:</label>
-                <textarea class="form-control" v-model="editCategory.description" id="edit-description"></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-warning" @click="closeModal('EditModel')">Cancel</button>
-            <button type="button" class="btn btn-danger" @click="updateCategory">Update Category</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="container-fluid py-4">
     <div class="row">
@@ -56,9 +26,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="category in categories" :key="category.id">
+                  <tr v-for="(category, index) in categories" :key="category.id">
                     <td>
-                      <h6 class="mb-0 text-sm">[[ category.id ]]</h6>
+                      <h6 class="mb-0 text-sm">[[index+1]]</h6>
                     </td>
                     <td>
                       <h6 class="mb-0 text-sm">[[ category.name ]]</h6>
@@ -67,7 +37,7 @@
                       <h6 class="mb-0 text-sm">[[ category.description ]]</h6>
                     </td>
                     <td class="align-middle text-center">
-                      <button class="btn btn-primary" @click="show_edit_category_modal(category)">Edit</button>
+                      <button class="btn btn-primary " @click="show_edit_category_modal(category)">Edit</button>
                       <button class="btn btn-warning" @click="confirmDelete(category.id)">Delete</button>
                     </td>
                   </tr>
@@ -114,11 +84,40 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal for Editing Category -->
+  <div class="modal fade" id="EditModel" tabindex="-1" role="dialog" aria-labelledby="EditModelTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Category</h5>
+          <button type="button" class="btn-close" @click="closeModal('EditModel')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="edit-name">Name:</label>
+              <input type="text" class="form-control" v-model="editCategory.name" id="edit-name" />
+            </div>
+            <div class="form-group">
+              <label for="edit-description">Description:</label>
+              <textarea class="form-control" v-model="editCategory.description" id="edit-description"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning" @click="closeModal('EditModel')">Cancel</button>
+          <button type="button" class="btn btn-danger" @click="updateCategory">Update Category</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}
 
 {% block vue %}
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
   const { createApp } = Vue;
   createApp({

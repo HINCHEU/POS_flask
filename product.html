@@ -29,9 +29,9 @@
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Category</th>
-                                        <!-- <th
+                                        <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Qty</th> -->
+                                            Qty</th>
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Price</th>
@@ -44,44 +44,46 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(product, index) in products" :key="product.id">
+                                    <tr>
                                         <td class="ml-2">
-                                            <p class="text-secondary mb-0 ml-2">[[ index + 1 ]]</p>
+                                            <p class="text-secondary mb-0 ml-2">001</p>
                                         </td>
                                         <td class="ml-2 align-center">
-                                            <p class="text-secondary mb-0 ml-2">[[ product.code ]]</p>
+                                            <p class="text-secondary mb-0 ml-2">0765644</p>
                                         </td>
                                         <td>
                                             <div class="d-flex px-2 py-1">
                                                 <div>
-                                                    <img :src="product.image" class="avatar avatar-sm me-3"
-                                                        alt="Product image">
+                                                    <img src="/static/admin/assets/img/team-2.jpg"
+                                                        class="avatar avatar-sm me-3" alt="user1">
                                                 </div>
+                                                <!-- <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">John Michael</h6>
+                                                    <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>
+                                                </div> -->
                                             </div>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">[[ product.name
-                                                ]]</span>
+                                            <span class="text-secondary text-xs font-weight-bold">Coca cola</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">[[ product.category
-                                                ]]</span>
+                                            <span class="text-secondary text-xs font-weight-bold">drink</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">[[
-                                                product.current_stock ]]</span>
+                                            <span class="text-secondary text-xs font-weight-bold">10</span>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">[[ product.price
-                                                ]]</span>
+                                            <span class="text-secondary text-xs font-weight-bold">1202</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <div class="btn btn-primary">Edit</div>
+                                            <div class="btn btn-primary ">Edit</div>
                                             <div class="btn btn-warning">Delete</div>
                                         </td>
                                     </tr>
                                 </tbody>
-
                             </table>
                         </div>
                     </div>
@@ -149,11 +151,6 @@
                                         <div class="input-group mb-3">
                                             <input type="file" class="form-control" @change="onImageUpload" />
                                         </div>
-                                        <!-- Image preview -->
-                                        <div v-if="newProduct.image">
-                                            <img :src="newProduct.image" alt="Selected Image" class="img-fluid mt-2"
-                                                style="max-width: 100px;" />
-                                        </div>
                                     </div>
                                 </div>
 
@@ -181,46 +178,6 @@
 
 {% block vue %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
-
-<!-- croper -->
-<!-- <script>
-    const productImageInput = document.getElementById('product-image');
-    const productImagePreview = document.getElementById('product-image-preview');
-    const cropButton = document.getElementById('crop-button');
-    const croppedImageInput = document.getElementById('croppedImage');
-    let cropper;
-
-    productImageInput.addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function (event) {
-            productImagePreview.src = event.target.result;
-            if (cropper) {
-                cropper.destroy();
-            }
-            cropper = new Cropper(productImagePreview, {
-                aspectRatio: 1 / 1,
-                viewMode: 1,
-                autoCropArea: 1,
-            });
-        };
-
-        reader.readAsDataURL(file);
-    });
-
-    cropButton.addEventListener('click', function () {
-        const canvas = cropper.getCroppedCanvas();
-        if (!canvas) {
-            return;
-        }
-        const croppedImage = canvas.toDataURL('image/png');
-        croppedImageInput.value = croppedImage;
-        productImagePreview.src = croppedImage;
-        cropper.destroy();
-    });
-</script> -->
 <script>
     const { createApp } = Vue;
     createApp({
@@ -231,80 +188,40 @@
                     name: '',
                     code: '',
                     image: '',
-                    category: '',
                     cost: '',
                     price: '',
-                    current_stock: ''
+                    current_stock: '',
+
                 },
-                products: []  // To store fetched products
-            };
+                editCategory: {
+                    id: null,
+                    name: '',
+                    description: ''
+                },
+                categories: [] // To store fetched categories
+            }
         },
         mounted() {
-            this.fetchProducts(); // Fetch products on load
-            console.log(this.products)
+            this.fetchProduct(); // Fetch categories on load
         },
         methods: {
+            onImageUpload(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    this.imageUrl = URL.createObjectURL(file); // Create a URL for the selected image
+                }
+            },
             show_add_product_modal() {
                 const modal = new bootstrap.Modal(document.getElementById('addModel'));
                 modal.show();
             },
-            close_add_product_modal() {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('addModel'));
+            closeModal(modalId) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
                 if (modal) {
                     modal.hide();
                 }
             },
-            // Fetch products from the backend
-            fetchProducts() {
-                fetch('/products')
-                    .then(response => response.json())
-                    .then(data => {
-                        this.products = data;
-                    })
-                    .catch(error => console.error('Error fetching products:', error));
-                console.log(this.products)
-            },
-            // Add new product
-            addProduct() {
-                const formData = {
-                    name: this.newProduct.name,
-                    code: this.newProduct.code,
-                    image: this.newProduct.image,  // Handle image file if required
-                    category: this.newProduct.category,
-                    cost: this.newProduct.cost,
-                    price: this.newProduct.price,
-                    current_stock: this.newProduct.current_stock
-                };
-
-                fetch('/add_product', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            this.fetchProducts(); // Refresh the product list
-                            this.close_add_product_modal();  // Close modal
-                        } else {
-                            alert(data.message);
-                        }
-                    })
-                    .catch(error => console.error('Error adding product:', error));
-            },
-            // Handle image upload and prepare it for submission
-            onImageUpload(event) {
-                const file = event.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.newProduct.image = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
         }
     }).mount('#app');
 </script>
-
 {% endblock %}

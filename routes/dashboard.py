@@ -161,6 +161,97 @@ def update_category(id):
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
+@app.route('/products')
+def get_products():
+    try:
+        conn = get_db_connection()
+        products = conn.execute('SELECT * FROM products').fetchall()
+        conn.close()
+
+        product_list = [
+            {
+                'id': product['id'],
+                'code': product['code'],
+                'image': product['image'],
+                'name': product['name'],
+                'category': product['category'],
+                'cost': product['cost'],
+                'price': product['price'],
+                'current_stock': product['current_stock']
+            } for product in products
+        ]
+
+        return jsonify(product_list), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# Add new product
+@app.route('/add_product', methods=['POST'])
+def add_product():
+    data = request.json
+    code = data.get('code')
+    image = data.get('image')
+    name = data.get('name')
+    category = data.get('category')
+    cost = data.get('cost')
+    price = data.get('price')
+    current_stock = data.get('current_stock')
+    
+    if not all([code, name, category, cost, price, current_stock]):
+        return jsonify({'status': 'error', 'message': 'All fields are required.'}), 400
+    
+    try:
+        conn = get_db_connection()
+        conn.execute(
+            'INSERT INTO products (code, image, name, category, cost, price, current_stock) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            (code, image, name, category, cost, price, current_stock)
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({'status': 'success'}), 201
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# Update product
+@app.route('/update_product/<int:id>', methods=['PUT'])
+def update_product(id):
+    data = request.json
+    name = data.get('name')
+    code = data.get('code')
+    image = data.get('image')
+    category = data.get('category')
+    cost = data.get('cost')
+    price = data.get('price')
+    current_stock = data.get('current_stock')
+    
+    if not all([code, name, category, cost, price, current_stock]):
+        return jsonify({'status': 'error', 'message': 'All fields are required.'}), 400
+    
+    try:
+        conn = get_db_connection()
+        conn.execute(
+            'UPDATE products SET code=?, image=?, name=?, category=?, cost=?, price=?, current_stock=? WHERE id=?',
+            (code, image, name, category, cost, price, current_stock, id)
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# Delete product
+@app.route('/delete_product/<int:id>', methods=['DELETE'])
+def delete_product(id):
+    try:
+        conn = get_db_connection()
+        conn.execute('DELETE FROM products WHERE id=?', (id,))
+        conn.commit()
+        conn.close()
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 @app.route('/admin/product')
 def product():  # put application's code here
     module = 'product'
