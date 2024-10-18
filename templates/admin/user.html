@@ -50,8 +50,11 @@
                     </td>
                     <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
                       user.name ]]</td>
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                    <!-- <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
                       user.gender_id ]]
+                    </td> -->
+                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">
+                      [[ getGenderLabel(user.gender_id) ]]
                     </td>
                     <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
                       user.role ]]</td>
@@ -368,6 +371,18 @@
             console.error('Error deleting user:', error);
             Swal.fire('Error', 'An error occurred while deleting the user', 'error');
           });
+      }
+      , getGenderLabel(gender_id) {
+        switch (gender_id) {
+          case 1:
+            return 'Male';
+          case 2:
+            return 'Female';
+          case 3:
+            return 'Other';
+          default:
+            return 'Unknown';
+        }
       }
     }
   }).mount('#app');
