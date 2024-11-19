@@ -169,9 +169,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal for Editing Category -->
-    <!-- Modal for Editing Product -->
-    <!-- Modal for Editing Product -->
     <div class="modal fade" id="EditModel" tabindex="-1" role="dialog" aria-labelledby="EditModelTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document"> <!-- Increased modal size -->
@@ -304,49 +301,52 @@
                     })
                     .catch(error => console.error('Error fetching categories:', error));
             },
+            onImageUpload(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    // Store the file object directly
+                    this.newProduct.imageFile = file;
+
+                    // Optional: Create a preview URL
+                    const previewURL = URL.createObjectURL(file);
+                    this.newProduct.image = previewURL; // For preview only
+                }
+            },
+
             addProduct() {
-                const formData = {
-                    name: this.newProduct.name,
-                    code: this.newProduct.code,
-                    image: this.newProduct.image,
-                    category: this.newProduct.category,
-                    cost: this.newProduct.cost,
-                    price: this.newProduct.price,
-                    current_stock: this.newProduct.current_stock
-                };
+                const formData = new FormData();
+                formData.append('name', this.newProduct.name);
+                formData.append('code', this.newProduct.code);
+                formData.append('category', this.newProduct.category);
+                formData.append('cost', this.newProduct.cost);
+                formData.append('price', this.newProduct.price);
+                formData.append('current_stock', this.newProduct.current_stock);
+
+                if (this.newProduct.imageFile) {
+                    formData.append('image', this.newProduct.imageFile, this.newProduct.imageFile.name);
+                }
 
                 fetch('/add_product', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
+                    body: formData,
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            swal("Success!", "You added the product successfully!", "success");
-                            this.fetchProducts(); // Refresh the product list
-                            this.close_add_product_modal(); // Close modal
-                        } else {
-                            swal("Error!", data.message, "error");
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Clean up the preview URL
+                        if (this.newProduct.image) {
+                            URL.revokeObjectURL(this.newProduct.image);
                         }
-                    })
-                    .catch(error => console.error('Error adding product:', error));
-            },
-            onImageUpload(event) {
-                const file = event.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    // Check if we're editing a product
-                    if (this.editProduct.id) {
-                        this.editProduct.image = e.target.result;  // Update editProduct's image
+                        swal("Success!", "You added the product successfully!", "success");
+                        this.fetchProducts();
+                        this.close_add_product_modal();
                     } else {
-                        this.newProduct.image = e.target.result;  // Update newProduct's image
+                        swal("Error!", data.message, "error");
                     }
-                };
-                reader.readAsDataURL(file);
+                })
+                .catch(error => console.error('Error adding product:', error));
             },
+
             // Other methods remain unchanged,
             confirmDelete(productId) {
                 swal({

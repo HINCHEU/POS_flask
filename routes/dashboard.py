@@ -1,6 +1,11 @@
 from flask import render_template,request,jsonify
 from app import app
 import sqlite3
+from werkzeug.utils import secure_filename
+import os
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -187,32 +192,58 @@ def get_products():
 
 
 # Add new product
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @app.route('/add_product', methods=['POST'])
 def add_product():
-    data = request.json
-    code = data.get('code')
-    image = data.get('image')
-    name = data.get('name')
-    category = data.get('category')
-    cost = data.get('cost')
-    price = data.get('price')
-    current_stock = data.get('current_stock')
-    
-    if not all([code, name, category, cost, price, current_stock]):
-        return jsonify({'status': 'error', 'message': 'All fields are required.'}), 400
-    
-    try:
-        conn = get_db_connection()
-        conn.execute(
-            'INSERT INTO products (code, image, name, category, cost, price, current_stock) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            (code, image, name, category, cost, price, current_stock)
-        )
-        conn.commit()
-        conn.close()
-        return jsonify({'status': 'success'}), 201
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+    if 'image' not in request.files:
+        return jsonify({'status': 'error', 'message': 'No image uploaded'}), 400
 
+    file = request.files['image']
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+
+        # Create path with leading slash for database
+        relative_path = f'/static/uploads/{filename}'  # Add leading slash
+
+        # Remove leading slash for actual file saving
+        save_path = relative_path[1:]  # Remove the leading slash for file system operations
+        full_path = os.path.join(os.getcwd(), save_path)
+        full_path = os.path.normpath(full_path)
+
+        # Ensure upload directory exists
+        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+
+        # Save the file
+        file.save(full_path)
+
+        # Retrieve form data
+        code = request.form.get('code')
+        name = request.form.get('name')
+        category = request.form.get('category')
+        cost = request.form.get('cost')
+        price = request.form.get('price')
+        current_stock = request.form.get('current_stock')
+
+        if not all([code, name, category, cost, price, current_stock]):
+            return jsonify({'status': 'error', 'message': 'All fields are required.'}), 400
+
+        try:
+            # Save the product details with the path including leading slash
+            conn = get_db_connection()
+            conn.execute(
+                'INSERT INTO products (code, image, name, category, cost, price, current_stock) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                (code, relative_path, name, category, cost, price, current_stock)
+            )
+            conn.commit()
+            conn.close()
+            return jsonify({'status': 'success'}), 201
+        except Exception as e:
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+    else:
+        return jsonify({'status': 'error', 'message': 'Invalid file type'}), 400
 @app.route('/update_product/<int:id>', methods=['PUT'])
 def update_product(id):
     data = request.json
