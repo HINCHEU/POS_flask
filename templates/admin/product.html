@@ -1,70 +1,106 @@
 {% extends "admin/layout.html" %}
 {% block main_content %}
-<div id="app">
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header pb-0">
-                        <h6>Product Table</h6>
-                        <div class="ml-3 float-end">
-                            <div class="btn btn-outline-primary" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalSignUp" @click="show_add_product_modal">Add</div>
+    <div id="app">
+        <div class="container-fluid py-4" >
+            <div class="row" >
+                <div class="col-12" >
+                    <div class="card mb-4" >
+                        <div class="card-header pb-0">
+                            <h6>Product Table</h6>
+                            <div class="ml-3 float-end">
+                                <div class="btn btn-outline-primary" data-bs-toggle="modal"
+                                     data-bs-target="#exampleModalSignUp" @click="show_add_product_modal">Add
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
-                                <thead>
+                        <div class="card-body px-0 pt-0 pb-2" >
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0" >
+                                    <thead>
                                     <tr>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            No</th>
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            No
+                                        </th>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Code</th>
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Code
+                                        </th>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Image</th>
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Image
+                                        </th>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Name</th>
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Name
+                                        </th>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Cost</th>
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Cost
+                                        </th>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Category</th>
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Category
+                                        </th>
                                         <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Price</th>
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Price
+                                        </th>
                                         <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Current Stock</th>
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Current Stock
+                                        </th>
                                         <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Action</th>
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Action
+                                        </th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody >
                                     <tr v-for="(product, index) in products" :key="product.id">
                                         <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                                            index + 1 ]]</td>
-                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                                            product.code ]]</td>
-                                        <td>
-                                            <img :src="product.image" class="avatar avatar-sm" alt="Product image">
+                                            index + 1 ]]
                                         </td>
                                         <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                                            product.name ]]</td>
+                                            product.code ]]
+                                        </td>
+                                        <td>
+                                            <!-- Dynamic Tooltip -->
+                                            <div
+                                                    class="position-relative"
+                                                    @mouseover="showTooltip(product.id, $event)"
+                                                    @mouseleave="hideTooltip"
+                                            >
+                                                <img
+                                                        :src="product.image"
+                                                        class="avatar avatar-sm"
+                                                        alt="Product image"
+                                                />
+                                                <!-- Tooltip for Full Image -->
+                                                <div
+                                                        v-if="tooltip.visible && tooltip.productId === product.id"
+                                                        class="custom-tooltip"
+{#                                                        :style="{ top: tooltip.position.y + 'px', left: tooltip.position.x + 'px' }"#}
+                                                >
+                                                    <img :src="tooltip.imageUrl" style="width: 200%" alt="Full image" class="img-fluid"/>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                                            product.cost ]]</td>
+                                            product.name ]]
+                                        </td>
                                         <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                                            product.category ]]</td>
+                                            product.cost ]]
+                                        </td>
                                         <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                                            product.price ]]</td>
+                                            product.category ]]
+                                        </td>
                                         <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                                            product.current_stock ]]</td>
+                                            product.price ]]
+                                        </td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            product.current_stock ]]
+                                        </td>
                                         <td class="align-middle text-center">
                                             <div class="btn btn-primary" @click="show_edit_product_modal(product)">Edit
                                             </div>
@@ -72,351 +108,525 @@
                                             </div>
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal for Adding Product -->
-    <div class="modal fade" id="addModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="card card-plain">
-                        <div class="card-header pb-0 text-left">
-                            <h3 class="font-weight-bolder text-primary text-gradient">Product</h3>
-                            <p class="mb-0">Enter Product Information</p>
-                        </div>
-                        <div class="card-body pb-3">
-                            <form role="form text-left">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Product Code</label>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control" placeholder="Product Code"
-                                                v-model="newProduct.code" />
+        <!-- Modal for Adding Product -->
+        <div class="modal fade" id="addModel" data-backdrop="static" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalSignTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="card card-plain">
+                            <div class="card-header pb-0 text-left">
+                                <h3 class="font-weight-bolder text-primary text-gradient">Product</h3>
+                                <p class="mb-0">Enter Product Information</p>
+                            </div>
+                            <div class="card-body pb-3">
+                                <form role="form text-left">
+                                    <div class="row">
+                                        <!-- Image Centered -->
+                                        <div class="col-md-12 mb-4">
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div
+                                                        class="image-upload-wrapper position-relative"
+                                                        @click="triggerFileInput"
+                                                        style="cursor: pointer;"
+                                                >
+                                                    <!-- Conditionally show the image or a blue circle -->
+                                                    <img
+                                                            v-if="newProduct.image"
+                                                            :src="newProduct.image"
+                                                            alt="Product Image"
+                                                            class="rounded-circle"
+                                                            style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ccc;"
+                                                    />
+                                                    <div
+                                                            v-else
+                                                            class="rounded-circle d-flex justify-content-center align-items-center"
+                                                            style="width: 100px; height: 100px; background-color: blue; color: white; font-weight: bold; border: 2px solid #ccc;"
+                                                    >
+                                                        Upload
+                                                    </div>
+                                                    <!-- Hidden file input -->
+                                                    <input
+                                                            type="file"
+                                                            class="d-none"
+                                                            ref="fileInput"
+                                                            @change="onImageUpload"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <label>Product Name</label>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control" placeholder="Product Name"
-                                                v-model="newProduct.name" />
+                                        <!-- First Column -->
+                                        <div class="col-md-6">
+                                            <label>Product Code</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="Product Code"
+                                                       v-model="newProduct.code"/>
+                                            </div>
+
+                                            <label>Product Name</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="Product Name"
+                                                       v-model="newProduct.name"/>
+                                            </div>
+
+                                            <label>Cost</label>
+                                            <div class="input-group mb-3">
+                                                <input type="number" class="form-control" placeholder="Cost"
+                                                       v-model="newProduct.cost"/>
+                                            </div>
+
+                                            <label>Current Stock</label>
+                                            <div class="input-group mb-3">
+                                                <input type="number" class="form-control" placeholder="Current Stock"
+                                                       v-model="newProduct.current_stock"/>
+                                            </div>
                                         </div>
 
+                                        <!-- Second Column -->
+                                        <div class="col-md-6">
+                                            <label>Category</label>
+                                            <div class="input-group mb-3">
+                                                <select class="form-control" v-model="newProduct.category"
+                                                        name="choices-button" id="choices-button">
+                                                    <option v-for="category in categories" :value="category.name"
+                                                            :key="category.id">
+                                                        [[ category.name ]]
+                                                    </option>
+                                                </select>
+                                            </div>
 
-                                        <label>Cost</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" class="form-control" placeholder="Cost"
-                                                v-model="newProduct.cost" />
-                                        </div>
-
-                                        <label>Current Stock</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" class="form-control" placeholder="Current Stock"
-                                                v-model="newProduct.current_stock" />
+                                            <label>Price</label>
+                                            <div class="input-group mb-3">
+                                                <input type="number" class="form-control" placeholder="Price"
+                                                       v-model="newProduct.price"/>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label>Category</label>
-                                        <div class="input-group mb-3">
-                                            <select class="form-control" v-model="newProduct.category"
-                                                name="choices-button" id="choices-button" placeholder="Choose category">
-                                                <option v-for="category in categories" :value="category.name"
-                                                    :key="category.id">
-                                                    [[ category.name ]]
-                                                </option>
-                                            </select>
-                                        </div>
-
-                                        <label>Price</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" class="form-control" placeholder="Price"
-                                                v-model="newProduct.price" />
-                                        </div>
-
-                                        <label>Product Image</label>
-                                        <div class="input-group mb-3">
-                                            <input type="file" class="form-control" @change="onImageUpload" />
-                                        </div>
-
-                                        <div v-if="newProduct.image">
-                                            <img :src="newProduct.image" alt="Selected Image" class="img-fluid mt-2"
-                                                style="max-width: 100px;" />
-                                        </div>
+                                    <!-- Action Buttons -->
+                                    <div class="text-center">
+                                        <button type="button" @click="addProduct"
+                                                class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">
+                                            Add Product
+                                        </button>
+                                        <button type="button" @click="close_add_product_modal"
+                                                class="btn bg-gradient-warning btn-lg btn-rounded w-100 mt-4 mb-0">
+                                            Close
+                                        </button>
                                     </div>
-                                </div>
+                                </form>
+                            </div>
 
-                                <div class="text-center">
-                                    <button type="button" @click="addProduct"
-                                        class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">
-                                        Add Product
-                                    </button>
-                                    <button type="button" @click="close_add_product_modal"
-                                        class="btn bg-gradient-warning btn-lg btn-rounded w-100 mt-4 mb-0">
-                                        Close
-                                    </button>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal fade" id="EditModel" tabindex="-1" role="dialog" aria-labelledby="EditModelTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document"> <!-- Increased modal size -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Product</h5>
-                    <button type="button" class="btn-close" @click="closeModal('EditModel')"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="row">
-                            <!-- First Column -->
-                            <div class="col-md-6 mb-3">
-                                <label for="edit-name">Name:</label>
-                                <input type="text" class="form-control" v-model="editProduct.name" id="edit-name" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="edit-code">Code:</label>
-                                <input type="text" class="form-control" v-model="editProduct.code" id="edit-code" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="edit-cost">Cost:</label>
-                                <input type="text" class="form-control" v-model="editProduct.cost" id="edit-cost" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="edit-price">Price:</label>
-                                <input type="text" class="form-control" v-model="editProduct.price" id="edit-price" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="edit-current_stock">Current Stock:</label>
-                                <input type="text" class="form-control" v-model="editProduct.current_stock"
-                                    id="edit-current_stock" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label>Category</label>
-                                <select class="form-control" v-model="editProduct.category">
-                                    <option v-for="category in categories" :value="category.name" :key="category.id">
-                                        [[ category.name ]]
-                                    </option>
-                                </select>
-                            </div>
+        <!-- Modal for Image Cropping -->
+        <div class="modal fade" id="cropperModal" data-backdrop="static" tabindex="-1" role="dialog"
+             aria-labelledby="cropperModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+                        <button type="button" class="btn-close" @click="closeCropperModal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="img-container">
+                            <img id="cropperImage" src="" alt="Picture" style="max-width: 100%;">
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="closeCropperModal">Cancel</button>
+                        <button type="button" class="btn btn-primary" @click="cropImage">Crop & Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="EditModel" data-backdrop="static" tabindex="-1" role="dialog"
+             aria-labelledby="EditModelTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document"> <!-- Increased modal size -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Product</h5>
+                        <button type="button" class="btn-close" @click="closeModal('EditModel')"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+                                <!-- First Column -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-name">Name:</label>
+                                    <input type="text" class="form-control" v-model="editProduct.name" id="edit-name"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-code">Code:</label>
+                                    <input type="text" class="form-control" v-model="editProduct.code" id="edit-code"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-cost">Cost:</label>
+                                    <input type="text" class="form-control" v-model="editProduct.cost" id="edit-cost"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-price">Price:</label>
+                                    <input type="text" class="form-control" v-model="editProduct.price"
+                                           id="edit-price"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-current_stock">Current Stock:</label>
+                                    <input type="text" class="form-control" v-model="editProduct.current_stock"
+                                           id="edit-current_stock"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label>Category</label>
+                                    <select class="form-control" v-model="editProduct.category">
+                                        <option v-for="category in categories" :value="category.name"
+                                                :key="category.id">
+                                            [[ category.name ]]
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
 
-                        <div class="mb-3">
-                            <label>Product Image</label>
-                            <div class="input-group">
-                                <input type="file" class="form-control" @change="onImageUpload" />
+                            <div class="mb-3">
+                                <label>Product Image</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" @change="onImageUpload"/>
+                                </div>
+                                <div v-if="editProduct.image">
+                                    <img :src="editProduct.image" alt="Selected Image" class="img-fluid mt-2"
+                                         style="max-width: 100px;"/>
+                                </div>
                             </div>
-                            <div v-if="editProduct.image">
-                                <img :src="editProduct.image" alt="Selected Image" class="img-fluid mt-2"
-                                    style="max-width: 100px;" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" @click="closeModal('EditModel')">Cancel</button>
-                    <button type="button" class="btn btn-danger" @click="updateProduct">Update Product</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" @click="closeModal('EditModel')">Cancel</button>
+                        <button type="button" class="btn btn-danger" @click="updateProduct">Update Product</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-</div>
 {% endblock %}
 
 {% block vue %}
-<script>
-    const { createApp } = Vue;
-    createApp({
-        delimiters: ['[[', ']]'],
-        data() {
-            return {
-                newProduct: {
-                    name: '',
-                    code: '',
-                    image: '',
-                    category: '',
-                    cost: '',
-                    price: '',
-                    current_stock: ''
+    <script>
+        const {createApp} = Vue;
+        createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    tooltip: {
+                        visible: false,
+                        productId: null,
+                        imageUrl: '',
+                        position: {x: 0, y: 0}
+                    },
+                    newProduct: {
+                        name: '',
+                        code: '',
+                        image: '',
+                        imageFile: null,
+                        originalFileName: '', // Add this to store original filename
+                        category: '',
+                        cost: '',
+                        price: '',
+                        current_stock: ''
+                    },
+                    editProduct: {
+                        id: null,
+                        name: '',
+                        code: '',
+                        image: '',
+                        category: '',
+                        cost: '',
+                        price: '',
+                        current_stock: ''
+                    },
+                    products: [],
+                    categories: [],
+                    cropper: null,
+                    image: null
+                };
+            },
+            mounted() {
+                this.fetchProducts();
+                this.fetchCategories();
+            },
+            methods: {
+                triggerFileInput() {
+                    // Programmatically click the hidden file input
+                    this.$refs.fileInput.click();
                 },
-                editProduct: {
-                    id: null,
-                    name: '',
-                    code: '',
-                    image: '',
-                    category: '',
-                    cost: '',
-                    price: '',
-                    current_stock: ''
+                // Image Cropping Methods
+                onImageUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        // Store original filename
+                        this.newProduct.originalFileName = file.name;
+
+                        // Read the file as Data URL
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const cropperImage = document.getElementById('cropperImage');
+                            cropperImage.src = e.target.result;
+
+                            const cropperModal = new bootstrap.Modal(document.getElementById('cropperModal'), {
+                                backdrop: 'static', // Prevent closing on outside click
+                                keyboard: false,    // Prevent closing on "Esc" key
+                            });
+                            cropperModal.show();
+
+                            this.$nextTick(() => {
+                                if (this.cropper) {
+                                    this.cropper.destroy();
+                                }
+                                this.cropper = new Cropper(cropperImage, {
+                                    aspectRatio: 1,
+                                    viewMode: 2,
+                                    dragMode: 'move',
+                                    autoCropArea: 1,
+                                    restore: false,
+                                    guides: true,
+                                    center: true,
+                                    highlight: false,
+                                    cropBoxMovable: true,
+                                    cropBoxResizable: true,
+                                    toggleDragModeOnDblclick: false,
+                                });
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    }
                 },
-                products: [],
-                categories: []  // To store fetched categories
-            };
-        },
-        mounted() {
-            this.fetchProducts(); // Fetch products on load
-            this.fetchCategories(); // Fetch categories on load
-        },
-        methods: {
-            show_add_product_modal() {
-                const modal = new bootstrap.Modal(document.getElementById('addModel'));
-                modal.show();
-            },
-            close_add_product_modal() {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('addModel'));
-                if (modal) {
-                    modal.hide();
-                }
-            },
-            fetchProducts() {
-                fetch('/products')
-                    .then(response => response.json())
-                    .then(data => {
-                        this.products = data;
+
+                cropImage() {
+                    if (!this.cropper) return;
+                    const canvas = this.cropper.getCroppedCanvas({
+                        width: 300,
+                        height: 300,
+                        imageSmoothingEnabled: false,
+                    });
+
+                    // Get the original filename and create the new filename
+                    const originalName = this.newProduct.originalFileName || 'image.jpg'; // Fallback to a default name if none provided
+                    const fileExtension = originalName.split('.').pop().toLowerCase(); // Ensure the extension is lowercase
+                    const fileNameWithoutExt = originalName.substring(0, originalName.lastIndexOf('.'));
+                    const newFileName = `${fileNameWithoutExt}_cropped.${fileExtension}`;
+
+                    // Convert the canvas to a blob and compress it by setting the quality to 0.5
+                    canvas.toBlob((blob) => {
+                        const croppedFile = new File([blob], newFileName, {
+                            type: `image/${fileExtension}`,
+                            lastModified: new Date().getTime(),
+                        });
+
+                        // Set the new cropped and compressed file
+                        this.newProduct.imageFile = croppedFile;
+                        this.newProduct.image = URL.createObjectURL(croppedFile); // Preview the cropped image
+
+                        this.closeCropperModal(); // Close the modal if it's open
+                    }, `image/${fileExtension}`, 0.5); // Compress the image to 50% quality
+                },
+
+                closeCropperModal() {
+                    if (this.cropper) {
+                        this.cropper.destroy();
+                        this.cropper = null;
+                    }
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('cropperModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+                },
+
+                show_add_product_modal() {
+                    const modal = new bootstrap.Modal(document.getElementById('addModel'), {
+                        backdrop: 'static', // Prevent closing on outside click
+                        keyboard: false,    // Prevent closing on "Esc" key
+                    });
+                    modal.show();
+                },
+
+                close_add_product_modal() {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addModel'));
+                    if (modal) {
+                        modal.hide();
+                    }
+                },
+
+                fetchProducts() {
+                    fetch('/products')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.products = data;
+                        })
+                        .catch(error => console.error('Error fetching products:', error));
+                },
+
+                fetchCategories() {
+                    fetch('/categories')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.categories = data;
+                        })
+                        .catch(error => console.error('Error fetching categories:', error));
+                },
+
+                addProduct() {
+                    const formData = new FormData();
+                    formData.append('name', this.newProduct.name);
+                    formData.append('code', this.newProduct.code);
+                    formData.append('category', this.newProduct.category);
+                    formData.append('cost', this.newProduct.cost);
+                    formData.append('price', this.newProduct.price);
+                    formData.append('current_stock', this.newProduct.current_stock);
+
+                    if (this.newProduct.imageFile) {
+                        formData.append('image', this.newProduct.imageFile);
+                    }
+
+                    fetch('/add_product', {
+                        method: 'POST',
+                        body: formData,
                     })
-                    .catch(error => console.error('Error fetching products:', error));
-            },
-            fetchCategories() {
-                fetch('/categories') // Fetch categories from the backend
-                    .then(response => response.json())
-                    .then(data => {
-                        this.categories = data; // Store categories in data
-                        console.log(this.categories)
-                    })
-                    .catch(error => console.error('Error fetching categories:', error));
-            },
-            onImageUpload(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    // Store the file object directly
-                    this.newProduct.imageFile = file;
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                if (this.newProduct.image) {
+                                    URL.revokeObjectURL(this.newProduct.image);
+                                }
+                                swal("Success!", "You added the product successfully!", "success");
+                                this.fetchProducts();
+                                this.close_add_product_modal();
+                                this.newProduct = {
+                                    name: '',
+                                    code: '',
+                                    image: '',
+                                    imageFile: null,
+                                    originalFileName: '',
+                                    category: '',
+                                    cost: '',
+                                    price: '',
+                                    current_stock: ''
+                                };
+                            } else {
+                                swal("Error!", data.message, "error");
+                            }
+                        })
+                        .catch(error => console.error('Error adding product:', error));
+                },
 
-                    // Optional: Create a preview URL
-                    const previewURL = URL.createObjectURL(file);
-                    this.newProduct.image = previewURL; // For preview only
-                }
-            },
-
-            addProduct() {
-                const formData = new FormData();
-                formData.append('name', this.newProduct.name);
-                formData.append('code', this.newProduct.code);
-                formData.append('category', this.newProduct.category);
-                formData.append('cost', this.newProduct.cost);
-                formData.append('price', this.newProduct.price);
-                formData.append('current_stock', this.newProduct.current_stock);
-
-                if (this.newProduct.imageFile) {
-                    formData.append('image', this.newProduct.imageFile, this.newProduct.imageFile.name);
-                }
-
-                fetch('/add_product', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        // Clean up the preview URL
-                        if (this.newProduct.image) {
-                            URL.revokeObjectURL(this.newProduct.image);
+                confirmDelete(productId) {
+                    swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this product!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willDelete) => {
+                        if (willDelete) {
+                            this.deleteProduct(productId);
                         }
-                        swal("Success!", "You added the product successfully!", "success");
-                        this.fetchProducts();
-                        this.close_add_product_modal();
-                    } else {
-                        swal("Error!", data.message, "error");
-                    }
-                })
-                .catch(error => console.error('Error adding product:', error));
-            },
+                    });
+                },
 
-            // Other methods remain unchanged,
-            confirmDelete(productId) {
-                swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this category!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        this.deleteProduct(productId);
-                    }
-                });
-            },
-            deleteProduct(productId) {
-                axios.delete(`/delete_product/${productId}`)
-                    .then(response => {
-                        if (response.data.status === 'success') {
-                            swal("Deleted!", "Product has been deleted!", "success");
-                            this.fetchProducts();
-                        } else {
+                deleteProduct(productId) {
+                    axios.delete(`/delete_product/${productId}`)
+                        .then(response => {
+                            if (response.data.status === 'success') {
+                                swal("Deleted!", "Product has been deleted!", "success");
+                                this.fetchProducts();
+                            } else {
+                                swal("Error!", "Failed to delete product!", "error");
+                            }
+                        })
+                        .catch(error => {
                             swal("Error!", "Failed to delete product!", "error");
-                        }
-                    })
-                    .catch(error => {
-                        swal("Error!", "Failed to delete product!", "error");
-                    });
-            },
-            // --------Edite--------------
-            show_edit_product_modal(product) {
-                this.editProduct = { ...product }; // Populate edit form with existing data
-                this.openEditModal(); // Use the modal opening function
-            },
-            openEditModal() {
-                const modal = new bootstrap.Modal(document.getElementById('EditModel'));
-                modal.show();
-            },
-            // show_edit_product_modal(product) {
-            //     this.editProduct = { ...product }; // Populate edit form with existing data
-            //     this.openEditModal(); // Use the modal opening function
-            // },
-            closeModal(modalId) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
-                if (modal) {
-                    modal.hide();
-                }
-            },
-            updateProduct() {
-                if (!this.editProduct.name.trim() || !this.editProduct.code.trim()) {
-                    swal("Error!", "Name and Code can't be empty!", "error");
-                    return;
-                }
-                console.log(this.editProduct.image.trim())
+                        });
+                },
 
-                axios.put(`/update_product/${this.editProduct.id}`, this.editProduct)
-                    .then(response => {
-                        if (response.data.status === 'success') {
-                            swal("Updated!", "Product updated successfully!", "success");
-                            this.fetchProducts(); // Refresh the product list
-                            this.closeModal('EditModel');
-                        } else {
+                show_edit_product_modal(product) {
+                    this.editProduct = {...product};
+                    this.openEditModal();
+                },
+
+                openEditModal() {
+                    const modal = new bootstrap.Modal(document.getElementById('EditModel'));
+                    modal.show();
+                },
+
+                closeModal(modalId) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
+                    if (modal) {
+                        modal.hide();
+                    }
+                },
+
+                updateProduct() {
+                    if (!this.editProduct.name.trim() || !this.editProduct.code.trim()) {
+                        swal("Error!", "Name and Code can't be empty!", "error");
+                        return;
+                    }
+
+                    axios.put(`/update_product/${this.editProduct.id}`, this.editProduct)
+                        .then(response => {
+                            if (response.data.status === 'success') {
+                                swal("Updated!", "Product updated successfully!", "success");
+                                this.fetchProducts();
+                                this.closeModal('EditModel');
+                            } else {
+                                swal("Error!", "Failed to update product!", "error");
+                            }
+                        })
+                        .catch(error => {
                             swal("Error!", "Failed to update product!", "error");
-                        }
-                    })
-                    .catch(error => {
-                        swal("Error!", "Failed to update product!", "error");
-                    });
+                        });
+                },
+                fetchProductImage() {
+                    fetch('/product/fullphoto')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.image = data;
+                        })
+                        .catch(error => console.error('Error fetching product image:', error));
+                },
+                // Hide tooltip
+                hideTooltip() {
+                    this.tooltip.visible = false;
+                },
+                showTooltip(productId, event) {
+                    this.tooltip.visible = false;
+                    fetch(`/product/fullphoto/${productId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.image_url) {
+                                console.log(data.image_url)
+                                this.tooltip = {
+                                    visible: true,
+                                    productId,
+                                    imageUrl: data.image_url,
+                                    position: {x: event.pageX + 10, y: event.pageY + 10} // Offset for tooltip position
+                                };
+                            }
+                        })
+                        .catch(error => console.error('Error fetching product image:', error));
+                },
             }
-
-        }
-    }).mount('#app');
-</script>
+        }).mount('#app');
+    </script>
 {% endblock %}

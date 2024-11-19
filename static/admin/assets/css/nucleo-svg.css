@@ -133,3 +133,18 @@ Stroke effects - Nucleo outline icons
   -o-transform: translateX(0.5px) translateY(0.5px);
   transform: translateX(0.5px) translateY(0.5px);
 }
+.custom-tooltip {
+    position: absolute;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    max-width: 200px;
+}
+.custom-tooltip img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}

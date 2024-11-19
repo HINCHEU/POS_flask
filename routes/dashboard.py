@@ -1,8 +1,10 @@
-from flask import render_template,request,jsonify
+from flask import render_template, request, jsonify
 from app import app
 import sqlite3
 from werkzeug.utils import secure_filename
 import os
+from PIL import Image
+
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -177,7 +179,8 @@ def get_products():
             {
                 'id': product['id'],
                 'code': product['code'],
-                'image': product['image'],
+                # Update image path to point to the compressed image folder
+                'image': f'/static/uploads/product/compress/{product["image"].split("/")[-1]}',
                 'name': product['name'],
                 'category': product['category'],
                 'cost': product['cost'],
@@ -191,11 +194,24 @@ def get_products():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/product/fullphoto/<int:product_id>', methods=['GET'])
+def get_product_full_photo(product_id):
+    try:
+        conn = get_db_connection()
+        product = conn.execute('SELECT image FROM products WHERE id = ?', (product_id,)).fetchone()
+        conn.close()
+        if not product:
+            return jsonify({'error': 'Product not found'}), 404
+
+        full_photo_url = product["image"]
+        return jsonify({'image_url': full_photo_url}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 # Add new product
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 @app.route('/add_product', methods=['POST'])
 def add_product():
     if 'image' not in request.files:
@@ -204,20 +220,33 @@ def add_product():
     file = request.files['image']
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-
-        # Create path with leading slash for database
-        relative_path = f'/static/uploads/{filename}'  # Add leading slash
+        # Define paths
+        original_path = f'/static/uploads/product/original/{filename}'
+        compress_path = f'/static/uploads/product/compress/{filename}'
 
         # Remove leading slash for actual file saving
-        save_path = relative_path[1:]  # Remove the leading slash for file system operations
-        full_path = os.path.join(os.getcwd(), save_path)
-        full_path = os.path.normpath(full_path)
+        original_save_path = original_path[1:]  # Remove the leading slash for file system operations
+        compress_save_path = compress_path[1:]
 
-        # Ensure upload directory exists
-        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        # Full paths
+        original_full_path = os.path.join(os.getcwd(), original_save_path)
+        compress_full_path = os.path.join(os.getcwd(), compress_save_path)
 
-        # Save the file
-        file.save(full_path)
+        # Ensure directories exist
+        os.makedirs(os.path.dirname(original_full_path), exist_ok=True)
+        os.makedirs(os.path.dirname(compress_full_path), exist_ok=True)
+
+        # Save the original file
+        file.save(original_full_path)
+
+        # Open the image for resizing
+        img = Image.open(file.stream)
+
+        # Resize the image to 30x30 for compression
+        img = img.resize((30, 30))
+
+        # Save the compressed image
+        img.save(compress_full_path)
 
         # Retrieve form data
         code = request.form.get('code')
@@ -231,11 +260,11 @@ def add_product():
             return jsonify({'status': 'error', 'message': 'All fields are required.'}), 400
 
         try:
-            # Save the product details with the path including leading slash
+            # Save the product details with both image paths
             conn = get_db_connection()
             conn.execute(
                 'INSERT INTO products (code, image, name, category, cost, price, current_stock) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                (code, relative_path, name, category, cost, price, current_stock)
+                (code, original_path, name, category, cost, price, current_stock)
             )
             conn.commit()
             conn.close()
