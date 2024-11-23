@@ -273,38 +273,86 @@ def add_product():
             return jsonify({'status': 'error', 'message': str(e)}), 500
     else:
         return jsonify({'status': 'error', 'message': 'Invalid file type'}), 400
+
+
 @app.route('/update_product/<int:id>', methods=['PUT'])
 def update_product(id):
-    data = request.json
+    if 'image' in request.files:
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            # Define paths
+            original_path = f'/static/uploads/product/original/{filename}'
+            compress_path = f'/static/uploads/product/compress/{filename}'
 
-    # Extract the product fields
-    name = data.get('name')
-    code = data.get('code')
-    image_base64 = data.get('image')
-    category = data.get('category')
-    cost = data.get('cost')
-    price = data.get('price')
-    current_stock = data.get('current_stock')
+            # Remove leading slash for actual file saving
+            original_save_path = original_path[1:]
+            compress_save_path = compress_path[1:]
 
-    if not name or not code:
+            # Full paths
+            original_full_path = os.path.join(os.getcwd(), original_save_path)
+            compress_full_path = os.path.join(os.getcwd(), compress_save_path)
+
+            # Ensure directories exist
+            os.makedirs(os.path.dirname(original_full_path), exist_ok=True)
+            os.makedirs(os.path.dirname(compress_full_path), exist_ok=True)
+
+            # Save the original file
+            file.save(original_full_path)
+
+            # Open the image for resizing
+            img = Image.open(file)
+
+            # Resize the image to 30x30 for compression
+            img = img.resize((30, 30))
+
+            # Save the compressed image
+            img.save(compress_full_path)
+
+            image_path = original_path
+    else:
+        # If no new image is uploaded, keep the existing image
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT image FROM products WHERE id = ?', (id,))
+        result = cursor.fetchone()
+        conn.close()
+        image_path = result['image'] if result else None
+
+    # Get form data
+    name = request.form.get('name')
+    code = request.form.get('code')
+    category = request.form.get('category')
+    cost = request.form.get('cost')
+    price = request.form.get('price')
+    current_stock = request.form.get('current_stock')
+
+    if not all([name, code]):
         return jsonify({'status': 'error', 'message': 'Name and Code are required.'}), 400
 
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Update the product in the database, including the base64 image
-        cursor.execute(
-            'UPDATE products SET name = ?, code = ?, image = ?, category = ?, cost = ?, price = ?, current_stock = ? WHERE id = ?',
-            (name, code, image_base64, category, cost, price, current_stock, id)
-        )
+        # Update the product in the database
+        cursor.execute('''
+            UPDATE products 
+            SET name = ?, 
+                code = ?, 
+                image = ?, 
+                category = ?, 
+                cost = ?, 
+                price = ?, 
+                current_stock = ? 
+            WHERE id = ?
+        ''', (name, code, image_path, category, cost, price, current_stock, id))
+
         conn.commit()
         conn.close()
 
         return jsonify({'status': 'success'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 # Delete product
 @app.route('/delete_product/<int:id>', methods=['DELETE'])
 def delete_product(id):
