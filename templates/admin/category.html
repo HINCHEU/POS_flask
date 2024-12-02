@@ -27,8 +27,8 @@
                 </thead>
                 <tbody>
                   <tr v-for="(category, index) in categories" :key="category.id">
-                    <td>
-                      <h6 class="mb-0 text-sm">[[index+1]]</h6>
+                    <td  class="">
+                      <h6 class="mb-0 text-sm m-lg-3">[[index+1]]</h6>
                     </td>
                     <td>
                       <h6 class="mb-0 text-sm">[[ category.name ]]</h6>
@@ -37,8 +37,8 @@
                       <h6 class="mb-0 text-sm">[[ category.description ]]</h6>
                     </td>
                     <td class="align-middle text-center">
-                      <button class="btn btn-primary " @click="show_edit_category_modal(category)">Edit</button>
-                      <button class="btn btn-warning" @click="confirmDelete(category.id)">Delete</button>
+                      <button class="btn btn-primary m-lg-1 " @click="show_edit_category_modal(category)">Edit</button>
+                      <button class="btn btn-warning m-lg-1" @click="confirmDelete(category.id)">Delete</button>
                     </td>
                   </tr>
                 </tbody>

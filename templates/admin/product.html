@@ -19,7 +19,7 @@
                                     <thead>
                                     <tr>
                                         <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             No
                                         </th>
                                         <th
@@ -58,8 +58,8 @@
                                     </thead>
                                     <tbody>
                                     <tr v-for="(product, index) in products" :key="product.id">
-                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                                            index + 1 ]]
+                                        <td class="">
+                                            <h6 class="mb-0 text-sm m-lg-3">[[index+1]]</h6>
                                         </td>
                                         <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
                                             product.code ]]
@@ -103,9 +103,11 @@
                                             product.current_stock ]]
                                         </td>
                                         <td class="align-middle text-center">
-                                            <div class="btn btn-primary m-lg-1 " @click="show_edit_product_modal(product)">Edit
+                                            <div class="btn btn-primary m-lg-1 "
+                                                 @click="show_edit_product_modal(product)">Edit
                                             </div>
-                                            <div class="btn btn-warning m-lg-1" @click="confirmDelete(product.id)">Delete
+                                            <div class="btn btn-warning m-lg-1" @click="confirmDelete(product.id)">
+                                                Delete
                                             </div>
                                         </td>
                                     </tr>
@@ -121,7 +123,7 @@
         <!-- Modal for Adding Product -->
         <div class="modal fade" id="addModel" data-backdrop="static" tabindex="-1" role="dialog"
              aria-labelledby="exampleModalSignTitle"
-             aria-hidden="true">
+        >
             <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-body p-0">
@@ -208,7 +210,7 @@
                                                 <input type="number" class="form-control" placeholder="Price"
                                                        v-model="newProduct.price"/>
                                             </div>
-                                             <label>Current Stock</label>
+                                            <label>Current Stock</label>
                                             <div class="input-group mb-3">
                                                 <input type="number" class="form-control" placeholder="Current Stock"
                                                        v-model="newProduct.current_stock"/>
