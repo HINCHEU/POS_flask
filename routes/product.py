@@ -11,7 +11,8 @@ from routes.dashboard import get_db_connection, ALLOWED_EXTENSIONS
 def get_products():
     try:
         conn = get_db_connection()
-        products = conn.execute('SELECT * FROM products').fetchall()
+        products = conn.execute(
+            'SELECT products.id,products.Code,products.current_stock,products.name,products.Cost,products.price,products.image,categories.name AS category_name,categories.id AS category_id FROM products INNER JOIN categories on products.category = categories.id;').fetchall()
         conn.close()
 
         product_list = [
@@ -21,7 +22,8 @@ def get_products():
                 # Update image path to point to the compressed image folder
                 'image': f'/static/uploads/product/compress/{product["image"].split("/")[-1]}',
                 'name': product['name'],
-                'category': product['category'],
+                'category': product['category_name'],
+                'category_id': product['category_id'],
                 'cost': product['cost'],
                 'price': product['price'],
                 'current_stock': product['current_stock']
@@ -51,6 +53,8 @@ def get_product_full_photo(product_id):
 # Add new product
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @app.route('/add_product', methods=['POST'])
 def add_product():
     if 'image' not in request.files:
@@ -59,12 +63,13 @@ def add_product():
     file = request.files['image']
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
+
         # Define paths
         original_path = f'/static/uploads/product/original/{filename}'
         compress_path = f'/static/uploads/product/compress/{filename}'
 
         # Remove leading slash for actual file saving
-        original_save_path = original_path[1:]  # Remove the leading slash for file system operations
+        original_save_path = original_path[1:]
         compress_save_path = compress_path[1:]
 
         # Full paths
@@ -78,14 +83,22 @@ def add_product():
         # Save the original file
         file.save(original_full_path)
 
-        # Open the image for resizing
-        img = Image.open(file.stream)
+        try:
+            # Open the image for resizing
+            img = Image.open(file.stream)
 
-        # Resize the image to 30x30 for compression
-        img = img.resize((30, 30))
+            # Convert the image to RGB mode if it's in RGBA or other unsupported modes
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
 
-        # Save the compressed image
-        img.save(compress_full_path)
+            # Resize the image to 30x30 for compression
+            img = img.resize((30, 30))
+
+            # Save the compressed image
+            img.save(compress_full_path, format="JPEG")
+
+        except Exception as e:
+            return jsonify({'status': 'error', 'message': f'Image processing failed: {str(e)}'}), 500
 
         # Retrieve form data
         code = request.form.get('code')
@@ -120,6 +133,7 @@ def update_product(id):
         file = request.files['image']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+
             # Define paths
             original_path = f'/static/uploads/product/original/{filename}'
             compress_path = f'/static/uploads/product/compress/{filename}'
@@ -139,15 +153,24 @@ def update_product(id):
             # Save the original file
             file.save(original_full_path)
 
-            # Open the image for resizing
-            img = Image.open(file)
+            try:
+                # Open the image for resizing
+                img = Image.open(file.stream)
 
-            # Resize the image to 30x30 for compression
-            img = img.resize((30, 30))
+                # Convert the image to RGB mode if it's in RGBA or other unsupported modes
+                if img.mode in ("RGBA", "P"):
+                    img = img.convert("RGB")
 
-            # Save the compressed image
-            img.save(compress_full_path)
+                # Resize the image to 30x30 for compression
+                img = img.resize((30, 30))
 
+                # Save the compressed image
+                img.save(compress_full_path, format="JPEG")
+
+            except Exception as e:
+                return jsonify({'status': 'error', 'message': f'Image processing failed: {str(e)}'}), 500
+
+            # Use the path of the newly uploaded image
             image_path = original_path
     else:
         # If no new image is uploaded, keep the existing image
@@ -192,6 +215,8 @@ def update_product(id):
         return jsonify({'status': 'success'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
 # Delete product
 @app.route('/delete_product/<int:id>', methods=['DELETE'])
 def delete_product(id):

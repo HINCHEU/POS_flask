@@ -1,0 +1,88 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Beef Burger",
+      "price": 45000,
+      "image": "http://127.0.0.1:5000//static/user/imgbeef-burger.png",
+      "options": null
+    },
+    {
+      "id": 2,
+      "name": "Sandwich",
+      "price": 32000,
+      "image": "http://127.0.0.1:5000//static/user/imgsandwich.png",
+      "options": null
+    },
+    {
+      "id": 3,
+      "name": "Sawarma",
+      "price": 30000,
+      "image": "http://127.0.0.1:5000//static/user/imgsawarma.png",
+      "options": null
+    },
+    {
+      "id": 4,
+      "name": "Croissant",
+      "price": 16000,
+      "image": "http://127.0.0.1:5000//static/user/imgcroissant.png",
+      "options": null
+    },
+    {
+      "id": 5,
+      "name": "Cinnamon Roll",
+      "price": 20000,
+      "image": "http://127.0.0.1:5000//static/user/imgcinnamon-roll.png",
+      "options": null
+    },
+    {
+      "id": 6,
+      "name": "Choco Glaze Donut with Peanut",
+      "price": 10000,
+      "image": "http://127.0.0.1:5000//static/user/imgchoco-glaze-donut-peanut.png",
+      "options": null
+    },
+    {
+      "id": 7,
+      "name": "Choco Glazed Donut",
+      "price": 10000,
+      "image": "http://127.0.0.1:5000//static/user/imgchoco-glaze-donut.png",
+      "options": null
+    },
+    {
+      "id": 8,
+      "name": "Red Glazed Donut",
+      "price": 10000,
+      "image": "http://127.0.0.1:5000//static/user/imgred-glaze-donut.png",
+      "options": null
+    },
+    {
+      "id": 9,
+      "name": "Iced Coffee Latte",
+      "price": 25000,
+      "image": "http://127.0.0.1:5000//static/user/imgcoffee-latte.png",
+      "options": null
+    },
+    {
+      "id": 10,
+      "name": "Iced Chocolate",
+      "price": 20000,
+      "image": "http://127.0.0.1:5000//static/user/imgice-chocolate.png",
+      "options": null
+    },
+    {
+      "id": 11,
+      "name": "Iced Tea",
+      "price": 15000,
+      "image": "http://127.0.0.1:5000//static/user/imgice-tea.png",
+      "options": null
+    },
+    {
+      "id": 12,
+      "name": "Iced Matcha Latte",
+      "price": 22000,
+      "image": "http://127.0.0.1:5000//static/user/imgmatcha-latte.png",
+      "options": null
+    }
+  ]
+}

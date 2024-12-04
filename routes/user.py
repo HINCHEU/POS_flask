@@ -2,6 +2,7 @@ from flask import render_template, request, jsonify
 from app import app
 from routes.dashboard import get_db_connection
 
+
 @app.route('/admin/user')
 def user_x():  # put application's code here
     module = 'user'
