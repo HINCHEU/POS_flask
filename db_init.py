@@ -21,7 +21,8 @@ c.execute('''
         Cost INTEGER NOT NULL,
         price REAL NOT NULL,
         image TEXT,
-        current_stock INTEGER NOT NULL
+        current_stock INTEGER NOT NULL,
+        FOREIGN KEY (category) REFERENCES categories(id)
     )
 ''')
 # Create Gender table
@@ -44,6 +45,7 @@ c.execute('''
         email TEXT NOT NULL,
         phone TEXT,
         address TEXT,
+        password TEXT,
         FOREIGN KEY (gender_id) REFERENCES Gender(id)
     )
 ''')

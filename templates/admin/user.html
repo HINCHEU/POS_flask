@@ -1,390 +1,432 @@
 {% extends "admin/layout.html" %}
 {% block main_content %}
-<div id="app">
-  <div class="container-fluid py-4">
-    <div class="row">
-      <div class="col-12">
-        <div class="card mb-4">
-          <div class="card-header pb-0">
-            <h6>Users Table</h6>
-            <div class="ml-3 float-end">
-              <div class="btn btn-outline-primary" @click="showAddUserModal">Add User</div>
-            </div>
-          </div>
-          <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
-              <table class="table align-items-center mb-0">
-                <thead>
-                  <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      No</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Code</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Profile</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Full Name</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Gender</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Role</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Email</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Phone</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Address</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(user, index) in users" :key="user.id">
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                      index + 1 ]]</td>
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                      user.code ]]</td>
-                    <td>
-                      <img :src="user.profile" class="avatar avatar-sm" alt="User profile">
-                    </td>
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                      user.name ]]</td>
-                    <!-- <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                      user.gender_id ]]
-                    </td> -->
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">
-                      [[ getGenderLabel(user.gender_id) ]]
-                    </td>
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                      user.role ]]</td>
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                      user.email ]]</td>
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                      user.phone ]]</td>
-                    <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
-                      user.address ]]</td>
-                    <td class="align-middle text-center">
-                      <div class="btn btn-primary" @click="showEditUserModal(user)">Edit</div>
-                      <div class="btn btn-warning" @click="confirmDelete(user.id)">Delete</div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal for Editing User -->
-  <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit User</h5>
-          <button type="button" class="btn-close" @click="closeModal('editUserModal')" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
+    <div id="app">
+        <div class="container-fluid py-4">
             <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="edit-name">Name:</label>
-                <input type="text" class="form-control" v-model="editUser.name" id="edit-name" />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="edit-code">Code:</label>
-                <input type="text" class="form-control" v-model="editUser.code" id="edit-code" />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="edit-email">Email:</label>
-                <input type="email" class="form-control" v-model="editUser.email" id="edit-email" />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="edit-phone">Phone:</label>
-                <input type="tel" class="form-control" v-model="editUser.phone" id="edit-phone" />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="edit-gender">Gender:</label>
-                <select class="form-control" v-model="editUser.gender_id" id="edit-gender">
-                  <option value="1">Male</option>
-                  <option value="2">Female</option>
-                  <option value="3">Other</option>
-                </select>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="edit-role">Role:</label>
-                <input type="text" class="form-control" v-model="editUser.role" id="edit-role" />
-              </div>
-              <div class="col-md-12 mb-3">
-                <label for="edit-address">Address:</label>
-                <textarea class="form-control" v-model="editUser.address" id="edit-address"></textarea>
-              </div>
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-header pb-0">
+                            <h6>Users Table</h6>
+                            <div class="ml-3 float-end">
+                                <div class="btn btn-outline-primary" @click="showAddUserModal">Add User</div>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pt-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            No
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Code
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Profile
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Full Name
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Gender
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Role
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Email
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Phone
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Address
+                                        </th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Action
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(user, index) in users" :key="user.id">
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            index + 1 ]]
+                                        </td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            user.code ]]
+                                        </td>
+                                        <td>
+                                            <img :src="user.profile" class="avatar avatar-sm" alt="User profile">
+                                        </td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            user.name ]]
+                                        </td>
+                                        <!-- <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                          user.gender_id ]]
+                                        </td> -->
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">
+                                            [[ getGenderLabel(user.gender_id) ]]
+                                        </td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            user.role ]]
+                                        </td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            user.email ]]
+                                        </td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            user.phone ]]
+                                        </td>
+                                        <td class="align-middle text-center text-secondary text-xs font-weight-bold">[[
+                                            user.address ]]
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="btn btn-primary m-lg-1" @click="showEditUserModal(user)">Edit
+                                            </div>
+                                            <div class="btn btn-warning m-lg-1" @click="confirmDelete(user.id)">Delete
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="mb-3">
-              <label>Profile Image</label>
-              <div class="input-group">
-                <input type="file" class="form-control" @change="onImageUpload" />
-              </div>
-              <div v-if="editUser.profile">
-                <img :src="editUser.profile" alt="Selected Image" class="img-fluid mt-2" style="max-width: 100px;" />
-              </div>
+        <!-- Modal for Editing User -->
+        <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit User</h5>
+                        <button type="button" class="btn-close" @click="closeModal('editUserModal')"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-name">Name:</label>
+                                    <input type="text" class="form-control" v-model="editUser.name" id="edit-name"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-code">Code:</label>
+                                    <input type="text" class="form-control" v-model="editUser.code" id="edit-code"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-email">Email:</label>
+                                    <input type="email" class="form-control" v-model="editUser.email" id="edit-email"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-phone">Phone:</label>
+                                    <input type="tel" class="form-control" v-model="editUser.phone" id="edit-phone"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-gender">Gender:</label>
+                                    <select class="form-control" v-model="editUser.gender_id" id="edit-gender">
+                                        <option value="1">Male</option>
+                                        <option value="2">Female</option>
+                                        <option value="3">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="edit-role">Role:</label>
+                                    <input type="text" class="form-control" v-model="editUser.role" id="edit-role"/>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="edit-address">Address:</label>
+                                    <textarea class="form-control" v-model="editUser.address"
+                                              id="edit-address"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Profile Image</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" @change="onImageUpload"/>
+                                </div>
+                                <div v-if="editUser.profile">
+                                    <img :src="editUser.profile" alt="Selected Image" class="img-fluid mt-2"
+                                         style="max-width: 100px;"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" @click="closeModal('editUserModal')">Cancel
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="updateUser">Update User</button>
+                    </div>
+                </div>
             </div>
-          </form>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-warning" @click="closeModal('editUserModal')">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="updateUser">Update User</button>
+        <!-- Modal for Adding User -->
+        <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add New User</h5>
+                        <button type="button" class="btn-close" @click="closeModal('addUserModal')"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit.prevent="addUser">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="add-name">Name:</label>
+                                    <input type="text" class="form-control" v-model="newUser.name" id="add-name"
+                                           required/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="add-code">Code:</label>
+                                    <input type="text" class="form-control" v-model="newUser.code" id="add-code"
+                                           required/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="add-email">Email:</label>
+                                    <input type="email" class="form-control" v-model="newUser.email" id="add-email"
+                                           required/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="add-phone">Phone:</label>
+                                    <input type="tel" class="form-control" v-model="newUser.phone" id="add-phone"
+                                           required/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="add-gender">Gender:</label>
+                                    <select class="form-control" v-model="newUser.gender_id" id="add-gender" required>
+                                        <option value="1">Male</option>
+                                        <option value="2">Female</option>
+                                        <option value="3">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="add-role">Role:</label>
+                                    <input type="text" class="form-control" v-model="newUser.role" id="add-role"
+                                           required/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="add-role">Password:</label>
+                                    <input type="password"
+                                           class="form-control"
+                                           v-model="newUser.password"
+                                           id="add-password"
+                                           required/>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="add-address">Address:</label>
+                                    <textarea class="form-control" v-model="newUser.address" id="add-address"
+                                              required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Profile Image</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" @change="onNewUserImageUpload"
+                                           accept="image/*"/>
+                                </div>
+                                <div v-if="newUser.profile">
+                                    <img :src="newUser.profile" alt="Selected Image" class="img-fluid mt-2"
+                                         style="max-width: 100px;"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" @click="closeModal('addUserModal')">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary">Add User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
     </div>
-  </div>
-  <!-- Modal for Adding User -->
-  <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add New User</h5>
-          <button type="button" class="btn-close" @click="closeModal('addUserModal')" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form @submit.prevent="addUser">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="add-name">Name:</label>
-                <input type="text" class="form-control" v-model="newUser.name" id="add-name" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="add-code">Code:</label>
-                <input type="text" class="form-control" v-model="newUser.code" id="add-code" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="add-email">Email:</label>
-                <input type="email" class="form-control" v-model="newUser.email" id="add-email" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="add-phone">Phone:</label>
-                <input type="tel" class="form-control" v-model="newUser.phone" id="add-phone" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="add-gender">Gender:</label>
-                <select class="form-control" v-model="newUser.gender_id" id="add-gender" required>
-                  <option value="1">Male</option>
-                  <option value="2">Female</option>
-                  <option value="3">Other</option>
-                </select>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="add-role">Role:</label>
-                <input type="text" class="form-control" v-model="newUser.role" id="add-role" required />
-              </div>
-              <div class="col-md-12 mb-3">
-                <label for="add-address">Address:</label>
-                <textarea class="form-control" v-model="newUser.address" id="add-address" required></textarea>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label>Profile Image</label>
-              <div class="input-group">
-                <input type="file" class="form-control" @change="onNewUserImageUpload" accept="image/*" />
-              </div>
-              <div v-if="newUser.profile">
-                <img :src="newUser.profile" alt="Selected Image" class="img-fluid mt-2" style="max-width: 100px;" />
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" @click="closeModal('addUserModal')">Cancel</button>
-              <button type="submit" class="btn btn-primary">Add User</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
 {% endblock %}
 
 {% block vue %}
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script>
-  const { createApp } = Vue;
-  createApp({
-    delimiters: ['[[', ']]'],
-    data() {
-      return {
-        newUser: {
-          code: '',
-          profile: '',
-          name: '',
-          gender_id: '',
-          role: '',
-          email: '',
-          phone: '',
-          address: ''
-        },
-        editUser: {
-          id: null,
-          code: '',
-          profile: '',
-          name: '',
-          gender_id: '',
-          role: '',
-          email: '',
-          phone: '',
-          address: ''
-        },
-        users: []
-      };
-    },
-    mounted() {
-      this.fetchUsers();
-    },
-    methods: {
-      fetchUsers() {
-        fetch('/users')
-          .then(response => response.json())
-          .then(data => {
-            this.users = data;
-          })
-          .catch(error => console.error('Error fetching users:', error));
-      },
-      showAddUserModal() {
-        this.resetNewUser();
-        const modal = new bootstrap.Modal(document.getElementById('addUserModal'));
-        modal.show();
-      },
-      showEditUserModal(user) {
-        this.editUser = { ...user };
-        const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
-        modal.show();
-      },
-      closeModal(modalId) {
-        const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
-        modal.hide();
-      },
-      resetNewUser() {
-        this.newUser = {
-          code: '',
-          profile: '',
-          name: '',
-          gender_id: '',
-          role: '',
-          email: '',
-          phone: '',
-          address: ''
-        };
-      },
-      onNewUserImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.newUser.profile = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      },
-      onImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.editUser.profile = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      },
-      addUser() {
-        fetch('/add_user', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.newUser)
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data.status === 'success') {
-              this.fetchUsers();
-              this.closeModal('addUserModal');
-              this.resetNewUser();
-              Swal.fire('Success', 'User added successfully', 'success');
-            } else {
-              Swal.fire('Error', 'Failed to add user', 'error');
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        const {createApp} = Vue;
+        createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    newUser: {
+                        code: '',
+                        profile: '',
+                        name: '',
+                        gender_id: '',
+                        role: '',
+                        email: '',
+                        phone: '',
+                        address: '',
+                        password: '',
+                    },
+                    editUser: {
+                        id: null,
+                        code: '',
+                        profile: '',
+                        name: '',
+                        gender_id: '',
+                        role: '',
+                        email: '',
+                        phone: '',
+                        address: ''
+                    },
+                    users: []
+                };
+            },
+            mounted() {
+                this.fetchUsers();
+            },
+            methods: {
+                fetchUsers() {
+                    fetch('/users')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.users = data;
+                        })
+                        .catch(error => console.error('Error fetching users:', error));
+                },
+                showAddUserModal() {
+                    this.resetNewUser();
+                    const modal = new bootstrap.Modal(document.getElementById('addUserModal'));
+                    modal.show();
+                },
+                showEditUserModal(user) {
+                    this.editUser = {...user};
+                    const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                    modal.show();
+                },
+                closeModal(modalId) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
+                    modal.hide();
+                },
+                resetNewUser() {
+                    this.newUser = {
+                        code: '',
+                        profile: '',
+                        name: '',
+                        gender_id: '',
+                        role: '',
+                        email: '',
+                        phone: '',
+                        address: ''
+                    };
+                },
+                onNewUserImageUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.newUser.profile = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+                onImageUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.editUser.profile = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+                addUser() {
+                    fetch('/add_user', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(this.newUser)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                this.fetchUsers();
+                                this.closeModal('addUserModal');
+                                this.resetNewUser();
+                                Swal.fire('Success', 'User added successfully', 'success');
+                            } else {
+                                Swal.fire('Error', 'Failed to add user', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error adding user:', error);
+                            Swal.fire('Error', 'An error occurred while adding the user', 'error');
+                        });
+                },
+                updateUser() {
+                    fetch(`/update_user/${this.editUser.id}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(this.editUser)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                this.fetchUsers();
+                                this.closeModal('editUserModal');
+                                Swal.fire('Success', 'User updated successfully', 'success');
+                            } else {
+                                Swal.fire('Error', 'Failed to update user', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error updating user:', error);
+                            Swal.fire('Error', 'An error occurred while updating the user', 'error');
+                        });
+                },
+                confirmDelete(userId) {
+                    swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this user!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willDelete) => {
+                        if (willDelete) {
+                            this.deleteUser(userId);
+                        }
+                    });
+                },
+                deleteUser(userId) {
+                    fetch(`/delete_user/${userId}`, {method: 'DELETE'})
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                this.fetchUsers();
+                                Swal.fire('Deleted!', 'User has been deleted.', 'success');
+                            } else {
+                                Swal.fire('Error', 'Failed to delete user', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting user:', error);
+                            Swal.fire('Error', 'An error occurred while deleting the user', 'error');
+                        });
+                },
+                getGenderLabel(gender_id) {
+                    switch (gender_id) {
+                        case 1:
+                            return 'Male';
+                        case 2:
+                            return 'Female';
+                        case 3:
+                            return 'Other';
+                        default:
+                            return 'Unknown';
+                    }
+                }
             }
-          })
-          .catch(error => {
-            console.error('Error adding user:', error);
-            Swal.fire('Error', 'An error occurred while adding the user', 'error');
-          });
-      },
-      updateUser() {
-        fetch(`/update_user/${this.editUser.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.editUser)
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data.status === 'success') {
-              this.fetchUsers();
-              this.closeModal('editUserModal');
-              Swal.fire('Success', 'User updated successfully', 'success');
-            } else {
-              Swal.fire('Error', 'Failed to update user', 'error');
-            }
-          })
-          .catch(error => {
-            console.error('Error updating user:', error);
-            Swal.fire('Error', 'An error occurred while updating the user', 'error');
-          });
-      },
-      confirmDelete(userId) {
-        swal({
-          title: "Are you sure?",
-          text: "Once deleted, you will not be able to recover this user!",
-          icon: "warning",
-          buttons: true,
-          dangerMode: true,
-        }).then((willDelete) => {
-          if (willDelete) {
-            this.deleteUser(userId);
-          }
-        });
-      },
-      deleteUser(userId) {
-        fetch(`/delete_user/${userId}`, { method: 'DELETE' })
-          .then(response => response.json())
-          .then(data => {
-            if (data.status === 'success') {
-              this.fetchUsers();
-              Swal.fire('Deleted!', 'User has been deleted.', 'success');
-            } else {
-              Swal.fire('Error', 'Failed to delete user', 'error');
-            }
-          })
-          .catch(error => {
-            console.error('Error deleting user:', error);
-            Swal.fire('Error', 'An error occurred while deleting the user', 'error');
-          });
-      }
-      , getGenderLabel(gender_id) {
-        switch (gender_id) {
-          case 1:
-            return 'Male';
-          case 2:
-            return 'Female';
-          case 3:
-            return 'Other';
-          default:
-            return 'Unknown';
-        }
-      }
-    }
-  }).mount('#app');
-</script>
+        }).mount('#app');
+    </script>
 {% endblock %}

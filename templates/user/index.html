@@ -216,7 +216,7 @@
                         >
                             <img :src="product.image" alt="Product">
                             <div class="flex pb-3 px-3 text-sm -mt-3">
-                                <p class="flex-grow truncate mr-1">[[product.name]] - [[product.category_id]]</p>
+                                <p class="flex-grow truncate mr-1">[[product.name]]</p>
                                 <p class="nowrap font-semibold">[[product.price]] $</p>
                             </div>
                         </div>
@@ -530,7 +530,20 @@
                 if (item.quantity > 1) {
                     item.quantity -= 1;
                 } else {
-                    this.removeFromCart(item);
+                    audio_button.play()
+                    swal({
+                        title: "Are you sure to delete this product?",
+                        text: "Once deleted, you will not be able to recover this product!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willDelete) => {
+                        if (willDelete) {
+                            this.removeFromCart(item);
+                            audio_button.play()
+                        }
+                    });
+
                 }
             },
             removeFromCart(item) {
@@ -583,7 +596,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        carts: this.cart,  // Assuming selectedProduct is your array
+                        carts: this.cart,
                         timestamp: new Date().toISOString()
                     })
                 })

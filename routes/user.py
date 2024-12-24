@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify
 from app import app
 from routes.dashboard import get_db_connection
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 @app.route('/admin/user')
@@ -22,6 +23,9 @@ def add_user():
     email = data.get('email')
     phone = data.get('phone')
     address = data.get('address')
+    password = data.get('password')
+
+    hashed_password = generate_password_hash(password)
 
     if not all([code, name, email]):
         return jsonify({'status': 'error', 'message': 'Code, name, and email are required.'}), 400
@@ -29,8 +33,8 @@ def add_user():
     try:
         conn = get_db_connection()
         conn.execute(
-            'INSERT INTO Users (code, profile, name, gender_id, role, email, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            (code, profile, name, gender_id, role, email, phone, address)
+            'INSERT INTO Users (code, profile, name, gender_id, role, email, phone, address,password) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)',
+            (code, profile, name, gender_id, role, email, phone, address, hashed_password)
         )
         conn.commit()
         conn.close()
@@ -106,3 +110,27 @@ def get_user(id):
             return jsonify({'status': 'error', 'message': 'User not found'}), 404
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'message': 'Email and password are required'}), 400
+
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM Users WHERE email = ?', (email,)).fetchone()
+    conn.close()
+
+    if user and check_password_hash(user[9], password):  # Assuming password is the 8th column
+        return jsonify({'message': 'Login successful!'}), 200
+    else:
+        return jsonify({'message': 'Invalid credentials'}), 401
+
+
+@app.route('/login_admin')
+def login_view():
+    return render_template('admin/log_in.html')
