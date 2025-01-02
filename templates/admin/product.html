@@ -517,12 +517,14 @@
                 },
 
                 fetchProducts() {
+                    $.LoadingOverlay("show");
                     fetch('/products')
                         .then(response => response.json())
                         .then(data => {
                             this.products = data;
                         })
                         .catch(error => console.error('Error fetching products:', error));
+                    $.LoadingOverlay("hide");
                 },
 
                 fetchCategories() {

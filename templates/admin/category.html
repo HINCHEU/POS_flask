@@ -1,242 +1,262 @@
 {% extends "admin/layout.html" %}
 {% block main_content %}
-<div id="app">
+    <div id="app">
 
-  <div class="container-fluid py-4">
-    <div class="row">
-      <div class="col-12">
-        <div class="card mb-4">
-          <div class="card-header pb-0">
-            <h6>Categories table</h6>
-            <div class="ml-3 float-end">
-              <button class="btn btn-outline-primary" @click="show_add_category_modal">Add</button>
-            </div>
-          </div>
-          <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
-              <table class="table align-items-center mb-0">
-                <thead>
-                  <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description
-                    </th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(category, index) in categories" :key="category.id">
-                    <td  class="">
-                      <h6 class="mb-0 text-sm m-lg-3">[[index+1]]</h6>
-                    </td>
-                    <td>
-                      <h6 class="mb-0 text-sm ">[[ category.name ]]</h6>
-                    </td>
-                    <td>
-                      <h6 class="mb-0 text-sm">[[ category.description ]]</h6>
-                    </td>
-                    <td class="align-middle text-center">
-                      <button class="btn btn-primary m-lg-1 " @click="show_edit_category_modal(category)">Edit</button>
-                      <button class="btn btn-warning m-lg-1" @click="confirmDelete(category.id)">Delete</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal for Adding Category -->
-  <div class="modal fade" id="addModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-      <div class="modal-content">
-        <div class="modal-body p-0">
-          <div class="card card-plain">
-            <div class="card-header pb-0 text-left">
-              <h3 class="font-weight-bolder text-primary text-gradient">Category</h3>
-              <p class="mb-0">Enter Category Information</p>
-            </div>
-            <div class="card-body pb-3">
-              <form role="form text-left">
-                <label>Name</label>
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="Name" v-model="newCategory.name" />
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-header pb-0">
+                            <h6>Categories table</h6>
+                            <div class="ml-3 float-end">
+                                <button class="btn btn-outline-primary" @click="show_add_category_modal">Add</button>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pt-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Id
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Name
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Description
+                                        </th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Action
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(category, index) in categories" :key="category.id">
+                                        <td class="">
+                                            <h6 class="mb-0 text-sm m-lg-3">[[index+1]]</h6>
+                                        </td>
+                                        <td>
+                                            <h6 class="mb-0 text-sm ">[[ category.name ]]</h6>
+                                        </td>
+                                        <td>
+                                            <h6 class="mb-0 text-sm">[[ category.description ]]</h6>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <button class="btn btn-primary m-lg-1 "
+                                                    @click="show_edit_category_modal(category)">Edit
+                                            </button>
+                                            <button class="btn btn-warning m-lg-1" @click="confirmDelete(category.id)">
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <label>Description</label>
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="Description" v-model="newCategory.description" />
-                </div>
-                <div class="text-center">
-                  <button type="button" @click="addCategory"
-                    class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add Category</button>
-                  <button type="button" @click="close_add_category_modal"
-                    class="btn bg-gradient-warning btn-lg btn-rounded w-100 mt-4 mb-0">Close</button>
-                </div>
-              </form>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Modal for Editing Category -->
-  <div class="modal fade" id="EditModel" tabindex="-1" role="dialog" aria-labelledby="EditModelTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Category</h5>
-          <button type="button" class="btn-close" @click="closeModal('EditModel')" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="edit-name">Name:</label>
-              <input type="text" class="form-control" v-model="editCategory.name" id="edit-name" />
+        <!-- Modal for Adding Category -->
+        <div class="modal fade" id="addModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="card card-plain">
+                            <div class="card-header pb-0 text-left">
+                                <h3 class="font-weight-bolder text-primary text-gradient">Category</h3>
+                                <p class="mb-0">Enter Category Information</p>
+                            </div>
+                            <div class="card-body pb-3">
+                                <form role="form text-left">
+                                    <label>Name</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Name"
+                                               v-model="newCategory.name"/>
+                                    </div>
+                                    <label>Description</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Description"
+                                               v-model="newCategory.description"/>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="button" @click="addCategory"
+                                                class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add
+                                            Category
+                                        </button>
+                                        <button type="button" @click="close_add_category_modal"
+                                                class="btn bg-gradient-warning btn-lg btn-rounded w-100 mt-4 mb-0">Close
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-              <label for="edit-description">Description:</label>
-              <textarea class="form-control" v-model="editCategory.description" id="edit-description"></textarea>
-            </div>
-          </form>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-warning" @click="closeModal('EditModel')">Cancel</button>
-          <button type="button" class="btn btn-danger" @click="updateCategory">Update Category</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-</div>
+        <!-- Modal for Editing Category -->
+        <div class="modal fade" id="EditModel" tabindex="-1" role="dialog" aria-labelledby="EditModelTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Category</h5>
+                        <button type="button" class="btn-close" @click="closeModal('EditModel')"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="edit-name">Name:</label>
+                                <input type="text" class="form-control" v-model="editCategory.name" id="edit-name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-description">Description:</label>
+                                <textarea class="form-control" v-model="editCategory.description"
+                                          id="edit-description"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" @click="closeModal('EditModel')">Cancel</button>
+                        <button type="button" class="btn btn-danger" @click="updateCategory">Update Category</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
 
 {% block vue %}
-<script>
-  const { createApp } = Vue;
-  createApp({
-    delimiters: ['[[', ']]'],
-    data() {
-      return {
-        newCategory: {
-          name: '',
-          description: ''
-        },
-        editCategory: {
-          id: null,
-          name: '',
-          description: ''
-        },
-        categories: [] // To store fetched categories
-      }
-    },
-    mounted() {
-      this.fetchCategories(); // Fetch categories on load
-    },
-    methods: {
-      show_add_category_modal() {
-        const modal = new bootstrap.Modal(document.getElementById('addModel'));
-        modal.show();
-      },
-      closeModal(modalId) {
-        const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
-        if (modal) {
-          modal.hide();
-        }
-      },
-      openEditModal() {
-        const modal = new bootstrap.Modal(document.getElementById('EditModel'));
-        modal.show();
-      },
-      show_edit_category_modal(category) {
-        this.editCategory = { ...category }; // Populate edit form with existing data
-        this.openEditModal(); // Use the modal opening function
-      },
-      addCategory() {
-        axios.post('/add_category', this.newCategory)
-          .then(response => {
-            if (response.data.status === 'success') {
-              swal("Success!", "You added the category successfully!", "success");
-              this.newCategory = { name: '', description: '' };
-              this.fetchCategories();
-              this.closeModal('addModel'); // Close the add modal
-            } else {
-              swal("Error!", "There was a problem adding the category!", "error");
-            }
-          })
-          .catch(error => {
-            swal("Error!", "Failed to add category!", "error");
-          });
-      },
-      fetchCategories() {
-        axios.get('/categories')
-          .then(response => {
-            this.categories = response.data;
-          })
-          .catch(error => {
-            console.error("Error fetching categories:", error);
-          });
-      },
-      confirmDelete(categoryId) {
-        swal({
-          title: "Are you sure?",
-          text: "Once deleted, you will not be able to recover this category!",
-          icon: "warning",
-          buttons: true,
-          dangerMode: true,
-        }).then((willDelete) => {
-          if (willDelete) {
-            this.deleteCategory(categoryId);
-          }
-        });
-      },
-      deleteCategory(categoryId) {
-        axios.delete(`/delete_category/${categoryId}`)
-          .then(response => {
-            if (response.data.status === 'success') {
-              swal("Deleted!", "Category has been deleted!", "success");
-              this.fetchCategories();
-            } else {
-              swal("Error!", "Failed to delete category!", "error");
-            }
-          })
-          .catch(error => {
-            swal("Error!", "Failed to delete category!", "error");
-          });
-      },
-      updateCategory() {
-        if (!this.editCategory.name.trim() || !this.editCategory.description.trim()) {
-          swal("Error!", "Name and Description can't be empty!", "error");
-          return;
-        }
+    <script>
+        const {createApp} = Vue;
+        createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    newCategory: {
+                        name: '',
+                        description: ''
+                    },
+                    editCategory: {
+                        id: null,
+                        name: '',
+                        description: ''
+                    },
+                    categories: [] // To store fetched categories
+                }
+            },
+            mounted() {
+                this.fetchCategories(); // Fetch categories on load
+            },
+            methods: {
+                show_add_category_modal() {
+                    const modal = new bootstrap.Modal(document.getElementById('addModel'));
+                    modal.show();
+                },
+                closeModal(modalId) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
+                    if (modal) {
+                        modal.hide();
+                    }
+                },
+                openEditModal() {
+                    const modal = new bootstrap.Modal(document.getElementById('EditModel'));
+                    modal.show();
+                },
+                show_edit_category_modal(category) {
+                    this.editCategory = {...category}; // Populate edit form with existing data
+                    this.openEditModal(); // Use the modal opening function
+                },
+                addCategory() {
+                    axios.post('/add_category', this.newCategory)
+                        .then(response => {
+                            if (response.data.status === 'success') {
+                                swal("Success!", "You added the category successfully!", "success");
+                                this.newCategory = {name: '', description: ''};
+                                this.fetchCategories();
+                                this.closeModal('addModel'); // Close the add modal
+                            } else {
+                                swal("Error!", "There was a problem adding the category!", "error");
+                            }
+                        })
+                        .catch(error => {
+                            swal("Error!", "Failed to add category!", "error");
+                        });
+                },
+                fetchCategories() {
+                    $.LoadingOverlay("show");
+                    axios.get('/categories')
+                        .then(response => {
+                            this.categories = response.data;
+                            $.LoadingOverlay("hide");
+                        })
+                        .catch(error => {
+                            console.error("Error fetching categories:", error);
+                            $.LoadingOverlay("hide");
+                        });
+                },
+                confirmDelete(categoryId) {
+                    swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this category!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willDelete) => {
+                        if (willDelete) {
+                            this.deleteCategory(categoryId);
+                        }
+                    });
+                },
+                deleteCategory(categoryId) {
+                    axios.delete(`/delete_category/${categoryId}`)
+                        .then(response => {
+                            if (response.data.status === 'success') {
+                                swal("Deleted!", "Category has been deleted!", "success");
+                                this.fetchCategories();
+                            } else {
+                                swal("Error!", "Failed to delete category!", "error");
+                            }
+                        })
+                        .catch(error => {
+                            swal("Error!", "Failed to delete category!", "error");
+                        });
+                },
+                updateCategory() {
+                    if (!this.editCategory.name.trim() || !this.editCategory.description.trim()) {
+                        swal("Error!", "Name and Description can't be empty!", "error");
+                        return;
+                    }
 
-        axios.put(`/update_category/${this.editCategory.id}`, this.editCategory)
-          .then(response => {
-            if (response.data.status === 'success') {
-              swal("Updated!", "Category updated successfully!", "success");
-              this.fetchCategories();
-              this.closeModal('EditModel');
-            } else {
-              swal("Error!", "Failed to update category!", "error");
+                    axios.put(`/update_category/${this.editCategory.id}`, this.editCategory)
+                        .then(response => {
+                            if (response.data.status === 'success') {
+                                swal("Updated!", "Category updated successfully!", "success");
+                                this.fetchCategories();
+                                this.closeModal('EditModel');
+                            } else {
+                                swal("Error!", "Failed to update category!", "error");
+                            }
+                        })
+                        .catch(error => {
+                            swal("Error!", "Failed to update category!", "error");
+                        });
+                },
+                close_add_category_modal() {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addModel'));
+                    if (modal) {
+                        modal.hide();
+                    }
+                }
             }
-          })
-          .catch(error => {
-            swal("Error!", "Failed to update category!", "error");
-          });
-      },
-      close_add_category_modal() {
-        const modal = bootstrap.Modal.getInstance(document.getElementById('addModel'));
-        if (modal) {
-          modal.hide();
-        }
-      }
-    }
-  }).mount('#app');
-</script>
+        }).mount('#app');
+    </script>
 {% endblock %}

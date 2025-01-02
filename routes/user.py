@@ -1,10 +1,13 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, session
 from app import app
 from routes.dashboard import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from routes.utils import role_required
+
 
 @app.route('/admin/user')
+@role_required('admin')
 def user_x():  # put application's code here
     module = 'user'
     return render_template('admin/user.html', module=module)
@@ -13,6 +16,7 @@ def user_x():  # put application's code here
 # -------------user----------
 # Add new user
 @app.route('/add_user', methods=['POST'])
+@role_required('admin')
 def add_user():
     data = request.json
     code = data.get('code')
@@ -45,6 +49,7 @@ def add_user():
 
 # Update user
 @app.route('/update_user/<int:id>', methods=['PUT'])
+@role_required('admin')
 def update_user(id):
     data = request.json
     code = data.get('code')
@@ -74,6 +79,7 @@ def update_user(id):
 
 # Delete user
 @app.route('/delete_user/<int:id>', methods=['DELETE'])
+@role_required('admin')
 def delete_user(id):
     try:
         conn = get_db_connection()
@@ -87,6 +93,7 @@ def delete_user(id):
 
 # Get all users
 @app.route('/users', methods=['GET'])
+@role_required('admin')
 def get_users():
     try:
         conn = get_db_connection()
@@ -99,6 +106,7 @@ def get_users():
 
 # Get user by ID
 @app.route('/user/<int:id>', methods=['GET'])
+@role_required('admin')
 def get_user(id):
     try:
         conn = get_db_connection()
@@ -125,7 +133,10 @@ def login():
     user = conn.execute('SELECT * FROM Users WHERE email = ?', (email,)).fetchone()
     conn.close()
 
-    if user and check_password_hash(user[9], password):  # Assuming password is the 8th column
+    if user and check_password_hash(user['password'], password):
+        session['user_id'] = user['id']
+        session['email'] = user['email']
+        session['role'] = user['role']
         return jsonify({'message': 'Login successful!'}), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
@@ -134,3 +145,9 @@ def login():
 @app.route('/login_admin')
 def login_view():
     return render_template('admin/log_in.html')
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return jsonify({'message': 'Logged out successfully!'}), 200

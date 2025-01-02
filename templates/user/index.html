@@ -590,14 +590,24 @@
                 const originalContent = document.body.innerHTML;
                 console.log(this.cart)
                 $.LoadingOverlay("show");
-                fetch('/send-receipt-telegram', {
+                fetch('/payment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         carts: this.cart,
-                        timestamp: new Date().toISOString()
+                        //// imestamp: new Date().toISOString()
+                        timestamp: new Date().toLocaleString('en-CA', { // Use 'en-CA' for ISO-like format
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false, // Use 24-hour time
+                            timeZone: 'Asia/Phnom_Penh' // Set the Cambodia timezone
+                        }).replace(',', '') // Remove any commas
                     })
                 })
                     .then(response => response.json())

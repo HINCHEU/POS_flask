@@ -1,9 +1,11 @@
 from flask import render_template, request, jsonify
 from app import app
 from routes.dashboard import get_db_connection
+from routes.utils import role_required
 
 
 @app.route('/admin/category')
+@role_required('admin')
 def category():  # put application's code here
     module = 'category'
     return render_template('admin/category.html', module=module)
@@ -11,6 +13,7 @@ def category():  # put application's code here
 
 # Get all categories
 @app.route('/categories')
+@role_required('admin')
 def get_categories():
     try:
         conn = get_db_connection()
@@ -28,6 +31,7 @@ def get_categories():
 
 
 @app.route('/add_category', methods=['POST'])
+@role_required('admin')
 def add_category():
     data = request.json
 
@@ -57,6 +61,7 @@ def add_category():
 
 
 @app.route('/delete_category/<int:id>', methods=['DELETE'])
+@role_required('admin')
 def delete_category(id):
     try:
         conn = get_db_connection()
@@ -71,6 +76,7 @@ def delete_category(id):
 
 
 @app.route('/edit_category', methods=['GET'])
+@role_required('admin')
 def edit_category():
     # Get the category ID from the request arguments
     category_id = request.args.get('id')
@@ -96,6 +102,7 @@ def edit_category():
 
 
 @app.route('/update_category/<int:id>', methods=['PUT'])
+@role_required('admin')
 def update_category(id):
     data = request.json
 

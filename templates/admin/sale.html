@@ -1,0 +1,188 @@
+{% extends "admin/layout.html" %}
+{% block main_content %}
+    <div id="app">
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-header pb-0">
+                            <h6>Product Table</h6>
+                            <div class="ml-3 float-end">
+                                <div class="btn btn-outline-primary" data-bs-toggle="modal"
+                                     data-bs-target="#exampleModalSignUp" @click="show_add_product_modal">Add
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pt-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Id
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Ref_code
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Sale Date
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Total Amount
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Received amount
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Status
+                                        </th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Action
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <template v-for="(sale, index) in sales" :key="sale.id">
+                                        <tr>
+                                            <td><h6 class="mb-0 text-sm m-lg-3">[[index + 1]]</h6></td>
+                                            <td class="align-left text-secondary text-xs font-weight-bold">
+                                                [[sale.ref_code]]
+                                            </td>
+                                            <td class="align-middle text-secondary text-xs font-weight-bold">
+                                                [[sale.sale_date]]
+                                            </td>
+                                            <td class="align-middle text-secondary text-xs font-weight-bold">
+                                                [[sale.total_amount]]
+                                            </td>
+                                            <td class="align-middle text-secondary text-xs font-weight-bold">
+                                                [[sale.received_amount]]
+                                            </td>
+                                            <td class="align-middle text-secondary text-xs font-weight-bold">
+                                                [[sale.status]]
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <a href="#" class="btn btn-sm btn-outline-secondary"
+                                                   @click="toggleDetail(sale)">
+                                                    <i v-if="!sale.show_detail" class="fas fa-eye"></i>
+                                                    <i v-if="sale.show_detail" class="fas fa-eye-slash"></i>
+                                                    Detail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="sale.show_detail">
+                                            <td colspan="6">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <h3 style="color: #CCCCCC">Sale Item</h3>
+                                                            </div>
+                                                            <div class="card-body" style="color: #0a001f">
+                                                                <table style="width: 100%"
+                                                                       class="table table-responsive table-bordered">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>No.</th>
+                                                                        <th>Description</th>
+                                                                        <th>Quantity</th>
+                                                                        <th>Price</th>
+                                                                        <th>SubTotal</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    <template v-if="sale.items">
+                                                                        <tr v-for="(item, itemIndex) in sale.items"
+                                                                            :key="itemIndex">
+                                                                            <td>[[itemIndex + 1]]</td>
+                                                                            <td>[[item.description]]</td>
+                                                                            <td>[[item.quantity]]</td>
+                                                                            <td>[[item.price]]</td>
+                                                                            <td>[[item.subtotal]]</td>
+                                                                        </tr>
+                                                                    </template>
+                                                                    <tr v-else>
+                                                                        <td colspan="5">No item</td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block vue %}
+    <script>
+        const {createApp} = Vue;
+        createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    sales: [],
+                };
+            },
+            mounted() {
+                this.fetchSaleReport();
+            },
+            methods: {
+                toggleDetail(selectedSale) {
+                    // Close all other details
+                    this.sales.forEach(sale => {
+                        if (sale !== selectedSale) {
+                            sale.show_detail = false;
+                        }
+                    });
+
+                    // If the selected sale is already open, close it; otherwise, fetch its details
+                    if (selectedSale.show_detail) {
+                        selectedSale.show_detail = false;
+                    } else {
+                        this.fetchSaleDetail(selectedSale.id);
+                    }
+                },
+                fetchSaleReport() {
+                    $.LoadingOverlay("show");
+                    fetch('/get_sales')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.sales = data.map(sale => ({...sale, show_detail: false, items: null}));
+                            $.LoadingOverlay("hide");
+                        })
+                        .catch(error => {
+                            $.LoadingOverlay("hide");
+                            swal("Error!", error.message, "error");
+                        });
+                },
+                fetchSaleDetail(sale_id) {
+                    {#$.LoadingOverlay("show");#}
+                    fetch(`/get_sale_detail/${sale_id}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const sale = this.sales.find(s => s.id === sale_id);
+                            if (sale) {
+                                sale.items = data.items; // assumes API returns { items: [...] }
+                                sale.show_detail = true;
+                            }
+                            {#$.LoadingOverlay("hide");#}
+                        })
+                        .catch(error => {
+                            {#$.LoadingOverlay("hide");#}
+                            swal("Error!", error.message, "error");
+                        });
+                },
+            }
+        }).mount('#app');
+    </script>
+{% endblock %}

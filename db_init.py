@@ -49,6 +49,31 @@ c.execute('''
         FOREIGN KEY (gender_id) REFERENCES Gender(id)
     )
 ''')
+c.execute(
+    '''
+        CREATE TABLE sale (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ref_code TEXT NOT NULL,
+            sale_date DATETIME NOT NULL,
+            total_amount REAL NOT NULL,
+            received_amount REAL NOT NULL,
+            status INTEGER NOT NULL
+        )
+    '''
+)
+c.execute(
+    '''
+        CREATE TABLE sale_item (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sale_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            quantity INTEGER NOT NULL,
+            price REAL NOT NULL,
+            total REAL NOT NULL,
+            FOREIGN KEY (sale_id) REFERENCES sale(id)
+        );
+    '''
+)
 # Insert gender options
 c.execute("INSERT INTO Gender (name) VALUES ('M')")
 c.execute("INSERT INTO Gender (name) VALUES ('F')")

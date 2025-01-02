@@ -5,9 +5,11 @@ from werkzeug.utils import secure_filename
 
 from app import app
 from routes.dashboard import get_db_connection, ALLOWED_EXTENSIONS
+from routes.utils import role_required
 
 
 @app.route('/products')
+@role_required('admin')
 def get_products():
     try:
         conn = get_db_connection()
@@ -36,6 +38,7 @@ def get_products():
 
 
 @app.route('/product/fullphoto/<int:product_id>', methods=['GET'])
+@role_required('admin')
 def get_product_full_photo(product_id):
     try:
         conn = get_db_connection()
@@ -56,6 +59,7 @@ def allowed_file(filename):
 
 
 @app.route('/add_product', methods=['POST'])
+@role_required('admin')
 def add_product():
     if 'image' not in request.files:
         return jsonify({'status': 'error', 'message': 'No image uploaded'}), 400
@@ -128,6 +132,7 @@ def add_product():
 
 
 @app.route('/update_product/<int:id>', methods=['PUT'])
+@role_required('admin')
 def update_product(id):
     if 'image' in request.files:
         file = request.files['image']
@@ -219,6 +224,7 @@ def update_product(id):
 
 # Delete product
 @app.route('/delete_product/<int:id>', methods=['DELETE'])
+@role_required('admin')
 def delete_product(id):
     try:
         conn = get_db_connection()
@@ -231,6 +237,7 @@ def delete_product(id):
 
 
 @app.route('/admin/product')
+@role_required('admin')
 def product():  # put application's code here
     module = 'product'
     return render_template('admin/product.html', module=module)
