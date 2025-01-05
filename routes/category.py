@@ -13,7 +13,6 @@ def category():  # put application's code here
 
 # Get all categories
 @app.route('/categories')
-@role_required('admin')
 def get_categories():
     try:
         conn = get_db_connection()

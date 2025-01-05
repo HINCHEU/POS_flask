@@ -377,7 +377,7 @@
 
                     <!-- Receipt Info -->
                     <div class="flex mt-4 text-xs">
-                        <div class="flex-grow">ល.រ: 12345</div>
+                        <div class="flex-grow">[[LastSaleId]]</div>
                         <div>[[ new Date().toLocaleString()]]</div>
                     </div>
 
@@ -461,11 +461,13 @@
                 cart: [],
                 filteredProductsList: [],
                 activeCategory: null,
+                LastSaleId: 0,
             };
         },
         mounted() {
             this.fetchProducts();
             this.fetchCategories();
+            this.fetchLastSaleId();
         },
         computed: {
             cartTotal() {
@@ -505,6 +507,15 @@
                         this.categories = data;
                     })
                     .catch(error => console.error('Error fetching categories:', error));
+            },
+            fetchLastSaleId() {
+                fetch('/get_last_sale_id')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.LastSaleId = data;
+                        alert(data)
+                    })
+                    .catch(error => console.error('Error fetching sale_id!', error))
             },
             addToCart(product) {
                 const existingProduct = this.cart.find(item => item.id === product.id);

@@ -49,6 +49,27 @@ def get_products_pos():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/get_last_sale_id')
+@login_required
+def get_last_sale_id():
+    conn = get_db_connection()
+    try:
+        # Fetch the last ref_code from the `sale` table
+        cursor = conn.cursor()
+        cursor.execute("SELECT ref_code FROM sale ORDER BY id DESC LIMIT 1")
+        last_ref_code = cursor.fetchone()
+
+        if last_ref_code:
+            last_ref_code = last_ref_code['ref_code']
+            prefix, number = last_ref_code.rsplit('_', 1)
+            new_number = str(int(number) + 1).zfill(3)
+            last_ref_code = f"{prefix}_{new_number}"
+    finally:
+        conn.close()
+    print(last_ref_code)
+    return jsonify(last_ref_code), 200
+
+
 @app.route('/payment', methods=['POST'])
 @login_required
 def save_print():
