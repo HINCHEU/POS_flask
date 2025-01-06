@@ -8,6 +8,13 @@
                     <div class="card mb-4">
                         <div class="card-header pb-0">
                             <h6>Categories table</h6>
+                            <div class="ml-3 float-start">
+                                <div class="btn btn-outline-primary" data-bs-toggle="modal"
+                                     data-bs-target="#exampleModalSignUp" @click="refresh">
+                                    <i class="fa-solid fa-arrows-rotate"
+                                       :class="{ rotating: isRotating }"></i> Refresh
+                                </div>
+                            </div>
                             <div class="ml-3 float-end">
                                 <button class="btn btn-outline-primary" @click="show_add_category_modal">Add</button>
                             </div>
@@ -150,13 +157,24 @@
                         name: '',
                         description: ''
                     },
-                    categories: [] // To store fetched categories
+                    categories: [],
+                    isRotating: false,
                 }
             },
             mounted() {
                 this.fetchCategories(); // Fetch categories on load
             },
             methods: {
+                refresh() {
+                    this.fetchCategories()
+                    this.rotateIcon()
+                },
+                rotateIcon() {
+                    this.isRotating = true;
+                    setTimeout(() => {
+                        this.isRotating = false;
+                    }, 1000);
+                },
                 show_add_category_modal() {
                     const modal = new bootstrap.Modal(document.getElementById('addModel'));
                     modal.show();

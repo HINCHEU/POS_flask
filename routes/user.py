@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, session
+from flask import render_template, request, jsonify, session, redirect
 from app import app
 from routes.dashboard import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -142,7 +142,7 @@ def login():
         return jsonify({'message': 'Invalid credentials'}), 401
 
 
-@app.route('/login_admin')
+@app.route('/login')
 def login_view():
     return render_template('admin/log_in.html')
 
@@ -150,4 +150,5 @@ def login_view():
 @app.route('/logout')
 def logout():
     session.clear()
-    return jsonify({'message': 'Logged out successfully!'}), 200
+    return redirect("/")
+    # return jsonify({'message': 'Logged out successfully!'}), 200

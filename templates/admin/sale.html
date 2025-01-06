@@ -7,10 +7,14 @@
                     <div class="card mb-4">
                         <div class="card-header pb-0">
                             <h6>Product Table</h6>
-                            <div class="ml-3 float-end">
+                            <div class="ml-3 float-start">
                                 <div class="btn btn-outline-primary" data-bs-toggle="modal"
-                                     data-bs-target="#exampleModalSignUp" @click="show_add_product_modal">Add
+                                     data-bs-target="#exampleModalSignUp" @click="refresh">
+                                    <i class="fa-solid fa-arrows-rotate"
+                                       :class="{ rotating: isRotating }"></i> Refresh
                                 </div>
+                            </div>
+                            <div class="ml-3 float-end">
                             </div>
                         </div>
                         <div class="card-body px-0 pt-0 pb-2">
@@ -83,7 +87,7 @@
                                                                     <thead>
                                                                     <tr>
                                                                         <th>No.</th>
-                                                                        <th>Description</th>
+                                                                        <th>Product name</th>
                                                                         <th>Quantity</th>
                                                                         <th>Price</th>
                                                                         <th>SubTotal</th>
@@ -94,7 +98,7 @@
                                                                         <tr v-for="(item, itemIndex) in sale.items"
                                                                             :key="itemIndex">
                                                                             <td>[[itemIndex + 1]]</td>
-                                                                            <td>[[item.description]]</td>
+                                                                            <td>[[item.name]]</td>
                                                                             <td>[[item.quantity]]</td>
                                                                             <td>[[item.price]]</td>
                                                                             <td>[[item.subtotal]]</td>
@@ -131,13 +135,25 @@
             data() {
                 return {
                     sales: [],
+                    isRotating: false
                 };
             },
             mounted() {
                 this.fetchSaleReport();
             },
             methods: {
+                refresh() {
+                    this.fetchSaleReport()
+                    this.rotateIcon()
+                },
+                rotateIcon() {
+                    this.isRotating = true;
+                    setTimeout(() => {
+                        this.isRotating = false;
+                    }, 1000);
+                },
                 toggleDetail(selectedSale) {
+                    console.log(selectedSale)
                     // Close all other details
                     this.sales.forEach(sale => {
                         if (sale !== selectedSale) {
@@ -158,6 +174,7 @@
                         .then(response => response.json())
                         .then(data => {
                             this.sales = data.map(sale => ({...sale, show_detail: false, items: null}));
+                            console.log(this.sales)
                             $.LoadingOverlay("hide");
                         })
                         .catch(error => {
@@ -166,7 +183,7 @@
                         });
                 },
                 fetchSaleDetail(sale_id) {
-                    {#$.LoadingOverlay("show");#}
+                    console.log(sale_id)
                     fetch(`/get_sale_detail/${sale_id}`)
                         .then(response => response.json())
                         .then(data => {
@@ -174,6 +191,7 @@
                             if (sale) {
                                 sale.items = data.items; // assumes API returns { items: [...] }
                                 sale.show_detail = true;
+                                console.log(sale.items)
                             }
                             {#$.LoadingOverlay("hide");#}
                         })

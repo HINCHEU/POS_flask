@@ -30,24 +30,31 @@ def get_sale_detail(sale_id):
     try:
         conn = get_db_connection()
 
-        # Fetch sale based on sale_id
+        # Fetch sale details based on sale_id
         sale = conn.execute('SELECT * FROM sale WHERE id = ?', (sale_id,)).fetchone()
-        print(sale)  # Debugging: print the fetched sale
         if not sale:
             return jsonify({'error': 'Sale not found'}), 404
 
-        print(sale_id)  # Debugging: print the sale_id
-
-        # Fetch related sale items using the sale_id parameter
-        sale_items = conn.execute('SELECT * FROM sale_item WHERE sale_id = ?', (sale_id,)).fetchall()
+        # Fetch related sale items and join with products
+        sale_items_query = '''
+            SELECT 
+                sale_item.quantity, 
+                sale_item.price, 
+                products.name 
+            FROM sale_item
+            INNER JOIN products ON sale_item.product_id = products.id
+            WHERE sale_item.sale_id = ?
+        '''
+        sale_items_list = conn.execute(sale_items_query, (sale_id,)).fetchall()
 
         # Prepare items list
         items = []
-        for item in sale_items:
-            print(list(item.keys()))  # Debugging: print keys of the current item
+        for item in sale_items_list:
+            print(dict(item))  # Debugging: Check structure of each row
             items.append({
                 'quantity': item['quantity'],
                 'price': item['price'],
+                'name': item['name'],
                 'subtotal': item['quantity'] * item['price']  # Calculate subtotal
             })
 

@@ -7,6 +7,13 @@
                     <div class="card mb-4">
                         <div class="card-header pb-0">
                             <h6>Product Table</h6>
+                            <div class="ml-3 float-start">
+                                <div class="btn btn-outline-primary" data-bs-toggle="modal"
+                                     data-bs-target="#exampleModalSignUp" @click="refresh">
+                                    <i class="fa-solid fa-arrows-rotate"
+                                       :class="{ rotating: isRotating }"></i> Refresh
+                                </div>
+                            </div>
                             <div class="ml-3 float-end">
                                 <div class="btn btn-outline-primary" data-bs-toggle="modal"
                                      data-bs-target="#exampleModalSignUp" @click="show_add_product_modal">Add
@@ -402,7 +409,8 @@
                     products: [],
                     categories: [],
                     cropper: null,
-                    image: null
+                    image: null,
+                    isRotating: false,
                 };
             },
             mounted() {
@@ -410,6 +418,17 @@
                 this.fetchCategories();
             },
             methods: {
+                refresh() {
+                    this.fetchProducts()
+                    this.fetchCategories()
+                    this.rotateIcon()
+                },
+                rotateIcon() {
+                    this.isRotating = true;
+                    setTimeout(() => {
+                        this.isRotating = false;
+                    }, 1000);
+                },
                 triggerFileInput() {
                     // Programmatically click the hidden file input
                     this.$refs.fileInput.click();

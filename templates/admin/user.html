@@ -7,6 +7,13 @@
                     <div class="card mb-4">
                         <div class="card-header pb-0">
                             <h6>Users Table</h6>
+                            <div class="ml-3 float-start">
+                                <div class="btn btn-outline-primary" data-bs-toggle="modal"
+                                     data-bs-target="#exampleModalSignUp" @click="refresh">
+                                    <i class="fa-solid fa-arrows-rotate"
+                                       :class="{ rotating: isRotating }"></i> Refresh
+                                </div>
+                            </div>
                             <div class="ml-3 float-end">
                                 <div class="btn btn-outline-primary" @click="showAddUserModal">Add User</div>
                             </div>
@@ -289,13 +296,24 @@
                         phone: '',
                         address: ''
                     },
-                    users: []
+                    users: [],
+                    isRotating: false
                 };
             },
             mounted() {
                 this.fetchUsers();
             },
             methods: {
+                refresh() {
+                    this.fetchUsers()
+                    this.rotateIcon()
+                },
+                rotateIcon() {
+                    this.isRotating = true;
+                    setTimeout(() => {
+                        this.isRotating = false;
+                    }, 1000);
+                },
                 fetchUsers() {
                     $.LoadingOverlay("show");
                     fetch('/users')
