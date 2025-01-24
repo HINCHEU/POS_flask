@@ -88,9 +88,17 @@
                                             user.address ]]
                                         </td>
                                         <td class="align-middle text-center">
-                                            <div class="btn btn-primary m-lg-1" @click="showEditUserModal(user)">Edit
+                                            <div
+                                                    class="btn text-white m-lg-1 "
+                                                    style="background-color: darkorange"
+
+                                                    @click="showEditUserModal(user)">Edit
                                             </div>
-                                            <div class="btn btn-warning m-lg-1" @click="confirmDelete(user.id)">Delete
+                                            <div
+                                                    class="btn text-white   m-lg-1"
+                                                    style="background-color: red"
+
+                                                    @click="confirmDelete(user.id)">Delete
                                             </div>
                                         </td>
                                     </tr>

@@ -50,10 +50,17 @@
                                             <h6 class="mb-0 text-sm">[[ category.description ]]</h6>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <button class="btn btn-primary m-lg-1 "
+                                            <button
+                                                    class="btn text-white m-lg-1 "
+                                                    style="background-color: darkorange"
+
                                                     @click="show_edit_category_modal(category)">Edit
                                             </button>
-                                            <button class="btn btn-warning m-lg-1" @click="confirmDelete(category.id)">
+                                            <button
+                                                    class="btn text-white m-lg-1 "
+                                                    style="background-color: red"
+
+                                                    @click="confirmDelete(category.id)">
                                                 Delete
                                             </button>
                                         </td>

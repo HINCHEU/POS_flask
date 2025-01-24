@@ -110,10 +110,15 @@
                                             product.current_stock ]]
                                         </td>
                                         <td class="align-middle text-center">
-                                            <div class="btn btn-primary m-lg-1 "
-                                                 @click="show_edit_product_modal(product)">Edit
+                                            <div
+                                                    class="btn text-white m-lg-1 "
+                                                    style="background-color: darkorange"
+                                                    @click="show_edit_product_modal(product)">Edit
                                             </div>
-                                            <div class="btn btn-warning m-lg-1" @click="confirmDelete(product.id)">
+                                            <div
+                                                    class="btn text-white   m-lg-1"
+                                                    style="background-color: red"
+                                                    @click="confirmDelete(product.id)">
                                                 Delete
                                             </div>
                                         </td>
